@@ -6,17 +6,44 @@ author: |-
   Jean Carlo Sanabria Martínez — C37241 \
   Universidad de Costa Rica, Escuela de Mátematica, Deoartamento de Ciencias Actuariales \
   Ciudad Universitaria Rodrigo Facio, San Pedro de Montes de Oca, San José, Costa Rica \
-  Profesor: Luis Alberto Juárez Potoy \
+  Profesor: Luis Alberto Juárez Potoy
   
 date: 2026-08-10
 date-format: long
 lang: es
   
-format: typst
+format:
+  typst:
+    papersize: a4
+    margin:
+      x: 1.8cm
+      y: 1.6cm
+    fontsize: 12pt
+
+execute:
+  echo: false
+  warning: false
+  message: false
+editor: 
+  markdown: 
+    wrap: 72
 ---
 
 ```{r}
+#Lectura de librerias:
 source("01_carga_librerias.R")
+
+```
+
+```{r}
+
+#Lectura de data:
+stock.price.raw <- read_csv("../data/master_stock_data.csv")
+
+
+```
+
+```{r}
 source("02_funciones_auxiliares.R")
 source("03_Revisión_y_depuración_data.R")
 source("04_Información_descriptiva_data.R")
@@ -30,7 +57,10 @@ source("03_Revisión_y_depuración_data.R")
 
 # Metodologia
 
-Usamos la ecuación de simulación exacta del Geometric Brownian Motion (GBM) para proyectar el valor de la acción de una empresa en t, en un salto de tiempo de tamaño $\Delta t$: $$\Large S_{t+\Delta t} = S_t \exp\left[ \left( \mu - \frac{\sigma^2}{2} \right)\Delta t + \sigma\sqrt{\Delta t}\,Z \right]$$
+Usamos la ecuación de simulación exacta del Geometric Brownian Motion
+(GBM) para proyectar el valor de la acción de una empresa en t, en un
+salto de tiempo de tamaño $\Delta t$:
+$$\Large S_{t+\Delta t} = S_t \exp\left[ \left( \mu - \frac{\sigma^2}{2} \right)\Delta t + \sigma\sqrt{\Delta t}\,Z \right]$$
 
 con $\large Z \sim N(0, 1)$;
 
@@ -40,19 +70,28 @@ $\Large\sigma$: Volatilidad de la acción anualizada.
 
 Fórmula $\Large\mu$:
 
-$$\large \mu = \frac{E\left[r_t \right]}{\Delta t} + \frac{\sigma^2}{2}$$ podemos simplifica esta expresión si suponemos que $\large E\left[r_t \right] = \overline{r_t}$
+$$\large \mu = \frac{E\left[r_t \right]}{\Delta t} + \frac{\sigma^2}{2}$$
+podemos simplifica esta expresión si suponemos que
+$\large E\left[r_t \right] = \overline{r_t}$
 
 $$\large \sigma = {sd}\left(\ln \left(\frac{S_i}{S_{i-1}} \right)\right)\sqrt{252} $$
 
-# Resultados
+```{=typst}
+#table(
+  columns: (1fr, 1fr),
+  stroke: 0.5pt + gray,
+  inset: 8pt,
 
-```{r}
-#Lectura data: 
+  [*Cartera*], [*Característica*],
 
-stock.price.raw <- read_csv("../data/master_stock_data.csv")
-
-
+  [Conservadora], [Baja volatilidad],
+  [Moderada], [Volatilidad media],
+  [Agresiva], [Alta volatilidad],
+  [Concentrada], [Acciones mucha correlación],
+  [Diversificada], [Acciones poca correlación]
+)
 ```
+# Resultados
 
 ```{r}
 source("06_Modelo_Lognormal_y_Monte_Carlo.R")
