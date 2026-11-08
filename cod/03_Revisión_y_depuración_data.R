@@ -1,3 +1,4 @@
+
 #Revisión preliminar data: ----
 
 str(stock.price.raw) 
