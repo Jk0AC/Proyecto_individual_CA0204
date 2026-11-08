@@ -1,0 +1,21 @@
+---
+title: "proyecto_individual"
+format: typst
+---
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+#Lectura data: 
+
+stock.price.raw <- read_csv("data/master_stock_data.csv")
+
+
+```
+
