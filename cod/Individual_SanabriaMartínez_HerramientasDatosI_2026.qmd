@@ -1,0 +1,38 @@
+---
+title: "Grup_7_HerramientasDatosI_2026"
+subtitle: "Herramientas de Ciencias de Datos I"
+
+author: |-
+  Jean Carlo Sanabria Martínez — C37241 \
+  Universidad de Costa Rica, Escuela de Mátematica, Deoartamento de Ciencias Actuariales \
+  Ciudad Universitaria Rodrigo Facio, San Pedro de Montes de Oca, San José, Costa Rica \
+  Profesor: Luis Alberto Juárez Potoy \
+  
+date: 2026-08-10
+date-format: long
+lang: es
+  
+format: typst
+---
+
+```{r}
+source("01_carga_librerias.R")
+source("02_funciones_auxiliares.R")
+source("03_Revisión_y_depuración_data.R")
+source("04_Información_descriptiva_data.R")
+source("05_Correlaciones_empresas.R")
+source("03_Revisión_y_depuración_data.R")
+```
+
+```{r}
+source("06_Modelo_Lognormal_y_Monte_Carlo.R")
+```
+
+```{r}
+#Lectura data: 
+
+stock.price.raw <- read_csv("../data/master_stock_data.csv")
+
+
+```
+
