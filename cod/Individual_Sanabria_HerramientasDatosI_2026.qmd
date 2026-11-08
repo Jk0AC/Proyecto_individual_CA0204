@@ -23,14 +23,29 @@ source("04_Información_descriptiva_data.R")
 source("05_Correlaciones_empresas.R")
 source("03_Revisión_y_depuración_data.R")
 ```
-# Introducción
 
+# Introducción
 
 # Objetivo
 
 # Metodologia
 
+Usamos la ecuación de simulación exacta del Geometric Brownian Motion (GBM) para proyectar el valor de la acción de una empresa en t, en un salto de tiempo de tamaño $\Delta t$: $$\Large S_{t+\Delta t} = S_t \exp\left[ \left( \mu - \frac{\sigma^2}{2} \right)\Delta t + \sigma\sqrt{\Delta t}\,Z \right]$$
+
+con $\large Z \sim N(0, 1)$;
+
+$\Large\mu$: Retorno esperado de la acción por año;
+
+$\Large\sigma$: Volatilidad de la acción anualizada.
+
+Fórmula $\Large\mu$:
+
+$$\large \mu = \frac{E\left[r_t \right]}{\Delta t} + \frac{\sigma^2}{2}$$ podemos simplifica esta expresión si suponemos que $\large E\left[r_t \right] = \overline{r_t}$
+
+$$\large \sigma = {sd}\left(\ln \left(\frac{S_i}{S_{i-1}} \right)\right)\sqrt{252} $$
+
 # Resultados
+
 ```{r}
 #Lectura data: 
 
@@ -46,6 +61,3 @@ source("06_Modelo_Lognormal_y_Monte_Carlo.R")
 # Bibliografía
 
 # Anexos
-
-
-

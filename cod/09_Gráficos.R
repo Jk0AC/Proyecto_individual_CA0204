@@ -39,7 +39,7 @@ etiquetas <- datos.plot %>%
   ungroup() %>%
   arrange(desc(Base100))
 
-ggplot(
+grafico.serie.historica.1 <- ggplot(
   datos.plot,
   aes(
     x = Date,
@@ -121,7 +121,7 @@ etiquetas.2 <- datos.plot.2 %>%
   slice_max(Date, n = 1) %>%
   ungroup()
 
-ggplot(
+grafico.serie.historica.2 <- ggplot(
   datos.plot.2,
   aes(
     x = Date,
@@ -188,7 +188,7 @@ muestra.volt$Ticker
 
 diag(matriz.cor) <- 1
 
-corrplot(
+grafico.corr.empresas <- corrplot(
   matriz.cor,
   method = "color",
   order = "hclust",
@@ -200,3 +200,4 @@ corrplot(
   rect.col = "#05235c",
   mar = c(0,0,2,0)
 )
+
