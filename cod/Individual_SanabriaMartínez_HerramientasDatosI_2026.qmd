@@ -23,11 +23,14 @@ source("04_Información_descriptiva_data.R")
 source("05_Correlaciones_empresas.R")
 source("03_Revisión_y_depuración_data.R")
 ```
+# Introducción
 
-```{r}
-source("06_Modelo_Lognormal_y_Monte_Carlo.R")
-```
 
+# Objetivo
+
+# Metodologia
+
+# Resultados
 ```{r}
 #Lectura data: 
 
@@ -35,4 +38,14 @@ stock.price.raw <- read_csv("../data/master_stock_data.csv")
 
 
 ```
+
+```{r}
+source("06_Modelo_Lognormal_y_Monte_Carlo.R")
+```
+
+# Bibliografía
+
+# Anexos
+
+
 
