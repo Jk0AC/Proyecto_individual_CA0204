@@ -35,7 +35,9 @@ calcular.volatilidad.anual <- function(retornos){
 
 ##(iii) ----
 
-
+#Función que recibe el último precio de la acción, su retorno esperado, la volatilidad
+#histórica, salto de tiempo y un valor particular de Z. Devuelve el precio
+#proyectado del GBM en el tiempo discreto t
 proyectar.accion <- function(s0, mu, vol, dt, z){
   
   #Tipos esperados:
