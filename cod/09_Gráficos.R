@@ -1,18 +1,6 @@
 
 
 #Graficos: ----
-# ggplot(stock.price.dep[1:252, ], aes(t, Log_Retornos)) +
-#   geom_line(color = "steelblue") +
-#   geom_hline(yintercept = 0,
-#              linetype = "dashed",
-#              color = "red") +
-#   labs(
-#     title = "Serie temporal de log-retornos",
-#     x = "Observación",
-#     y = "Log-retorno"
-#   ) +
-#   theme_minimal()
-
 
 ##Graficos serie histórica precio: ----
 
