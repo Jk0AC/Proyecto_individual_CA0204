@@ -49,3 +49,40 @@ proyectar.accion <- function(s0, mu, vol, dt, z){
   
   return(St)
 }
+
+##(iv)----
+
+#Función que recibe un vector (vector con valores de proyecciones de la cartera)
+#y devuelve un tibble con un resumen estadístico: esperanza, VaR, 
+#probabilidad de pérdida y errores estándar variables simuladas: valor esperado, 
+#probabilidad de pérdida
+
+resumen.cartera <- function(V1, Vo = 102000){
+  
+  # Valor esperado
+  valor.esperado <- mean(V1)
+  
+  # VaR empírico (percentil 5%)
+  VaR <- quantile(V1, probs = 0.05)
+  
+  # Probabilidad de pérdida
+  prob.perdida <- mean(V1 < Vo)
+  
+  # Error estándar del valor esperado
+  EE.esperanza <- sd(V1) / sqrt(length(V1))
+  
+  # Error estándar de la probabilidad de pérdida
+  EE.prob.perdida <- sqrt(
+    prob.perdida * (1 - prob.perdida) /
+      length(V1)
+  )
+  
+  tibble::tibble(
+    `Valor esperado` = valor.esperado,
+    `VaR (5%)` = as.numeric(VaR),
+    `Probabilidad pérdida` = prob.perdida,
+    `EE esperanza` = EE.esperanza,
+    `EE prob pérdida` = EE.prob.perdida
+  )
+  
+}
