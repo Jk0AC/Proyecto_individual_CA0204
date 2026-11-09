@@ -83,6 +83,9 @@ Total.acciones.5 <- sum(cartera.5$delta)
 
 inversion == c(Vo.1, Vo.2, Vo.3, Vo.4, Vo.5)
 
+
+
+
 ##Proyección carteras ----
 
 ### Proyección Cartera 1 (muy volatil): ----
@@ -109,15 +112,6 @@ sd(V1.1)
 
 quantiles.distribucion.1 <- quantile(V1.3, probs = c(0.05, 0.5, 0.95))
 
-IC.media.1 <- c(
-  valor.esperado.1 - 1.96*SE.Ve.1,
-  valor.esperado.1 + 1.96*SE.Ve.1
-)
-
-IC.prob.1 <-  c(
-  prob.perdida.1 - 1.96*SE.pp.1,
-  prob.perdida.1 + 1.96*SE.pp.1
-)
 
 ### Proyección Cartera 2 (poco volatil): ----
 
@@ -144,17 +138,6 @@ sd(V1.2)
 
 quantiles.distribucion.2 <- quantile(V1.2, probs = c(0.05, 0.5, 0.95))
 
-IC.media.2 <- c(
-  valor.esperado.2 - 1.96*SE.Ve.2,
-  valor.esperado.2 + 1.96*SE.Ve.2
-)
-
-IC.prob.2 <-  c(
-  prob.perdida.2 - 1.96*SE.pp.2,
-  prob.perdida.2 + 1.96*SE.pp.2
-)
-
-
 
 ### Proyección Cartera 3 (volatilidad media): ----
 cartera.3.proyectada <- cartera.3 %>% 
@@ -177,20 +160,6 @@ median(V1.3, na.rm = T)
 sd(V1.3)
 
 quantiles.distribucion.3 <- quantile(V1.3, probs = c(0.05, 0.5, 0.95))
-
-
-IC.media.3 <- c(
-  valor.esperado.3 - 1.96*SE.Ve.3,
-  valor.esperado.3 + 1.96*SE.Ve.3
-)
-
-IC.prob.3 <-  c(
-  prob.perdida.3 - 1.96*SE.pp.3,
-  prob.perdida.3 + 1.96*SE.pp.3
-)
-
-
-resumen.cartera(V1.3)
 
 ### Proyección Cartera 4 (no diversificada): ----
 cartera.4.proyectada <- cartera.4 %>% 
@@ -217,15 +186,6 @@ sd(V1.4)
 
 quantiles.distribucion.4 <- quantile(V1.4, probs = c(0.05, 0.5, 0.95))
 
-IC.media.4 <- c(
-  valor.esperado.4 - 1.96*SE.Ve.4,
-  valor.esperado.4 + 1.96*SE.Ve.4
-)
-
-IC.prob.4 <-  c(
-  prob.perdida.4 - 1.96*SE.pp.4,
-  prob.perdida.4 + 1.96*SE.pp.4
-)
 
 
 ### Proyección Cartera 5 (diversificada): ----
@@ -252,17 +212,9 @@ sd(V1.5)
 
 quantiles.distribucion.5 <- quantile(V1.5, probs = c(0.05, 0.5, 0.95))
 
-IC.media.5 <- c(
-  valor.esperado.5 - 1.96*SE.Ve.5,
-  valor.esperado.5 + 1.96*SE.Ve.5
-)
+# Resumen estadísticos resultados: ----
 
-IC.prob.5 <-  c(
-  prob.perdida.5 - 1.96*SE.pp.5,
-  prob.perdida.5 + 1.96*SE.pp.5
-)
-
-
+## Métricas generales: ----
 resumen.carteras <- bind_rows(
   Conservadora = resumen.cartera(V1.2),
   Moderada     = resumen.cartera(V1.3),
@@ -271,3 +223,24 @@ resumen.carteras <- bind_rows(
   Diversificada= resumen.cartera(V1.5),
   .id = "Cartera"
 )
+
+
+
+## Intervalos de confianza: ----
+IC.esperanza <- resumen.carteras %>% 
+  summarise(`IC esperanza (mín)` = 
+    `Valor esperado` - 1.96*`EE esperanza`,
+    `IC esperanza (máx)` = 
+      `Valor esperado` + 1.96*`EE esperanza`, 
+    .by = Cartera)
+
+IC.prob.perdida <- resumen.carteras %>% 
+  summarise(`IC prob pérdida (mín)` = 
+              `Probabilidad pérdida` - 1.96*`EE prob pérdida`,
+            `IC prob pérdida (máx)` = 
+            `Probabilidad pérdida` + 1.96*`EE prob pérdida`, 
+            .by = Cartera)
+
+IC.carteras <- IC.esperanza %>% left_join(IC.prob.perdida, by = "Cartera")
+
+
