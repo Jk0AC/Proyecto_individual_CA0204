@@ -1,20 +1,21 @@
 
-#Carteras ----
 
-##Inversión inicial ----
+#Inversión inicial ----
 
-#Definimos el monto de inversión (en $):
+## Definimos el monto de inversión (en $): ----
 inversion <- 102e03
 
-#Pesos acciones:
+## Pesos acciones: ----
+
 #Defimos pesos iguales para todas las empresa. Es decir invertimos en cada empresa
 #una proporción igual de nuestra inversión:
 
 w <- 1/6
+
 inversion.empresa <- inversion*w
 
 
-##Construcción de las carteras ----
+#Construcción de las carteras ----
 
 #Cada cartera tendrá delta acciones de 6 diferentes empresas, seleccionadas
 #bajo distintos criterios:
@@ -86,7 +87,7 @@ inversion == c(Vo.1, Vo.2, Vo.3, Vo.4, Vo.5)
 
 
 
-##Proyección carteras ----
+#Proyección carteras ----
 
 ### Proyección Cartera 1 (muy volatil): ----
 cartera.1.proyectada <- cartera.1 %>% 
@@ -104,7 +105,7 @@ V1.1 <- cartera.1.proyectada %>%
   pull(V1) %>% sort()
 
 
-#Métricas del resultado:
+#Métricas:
 
 median(V1.1, na.rm = T)
 
@@ -130,7 +131,7 @@ V1.2 <- cartera.2.proyectada %>%
   summarise(V1 = sum(delta * S1)) %>%
   pull(V1) %>% sort() 
 
-#Métricas del resultado:
+#Métricas:
 
 median(V1.2, na.rm = T)
 
@@ -154,7 +155,7 @@ V1.3 <- cartera.3.proyectada %>%
   summarise(V1 = sum(delta * S1)) %>%
   pull(V1) %>% sort()
 
-#Métricas del resultado:
+#Métricas:
 median(V1.3, na.rm = T)
 
 sd(V1.3)
@@ -176,7 +177,7 @@ V1.4 <- cartera.4.proyectada %>%
   summarise(V1 = sum(delta * S1)) %>%
   pull(V1) %>% sort()
 
-#Métricas del resultado:
+#Métricas:
 
 
 median(V1.4, na.rm = T)
@@ -203,7 +204,7 @@ V1.5 <- cartera.5.proyectada %>%
   summarise(V1 = sum(delta * S1)) %>%
   pull(V1) %>% sort()
 
-#Métricas del resultado:
+#Métricas:
 
 
 median(V1.5, na.rm = T)
