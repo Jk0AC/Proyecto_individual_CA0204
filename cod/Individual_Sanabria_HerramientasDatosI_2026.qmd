@@ -60,6 +60,7 @@ source("03_Revisión_y_depuración_data.R")
 Usamos la ecuación de simulación exacta del Geometric Brownian Motion
 (GBM) para proyectar el valor de la acción de una empresa en t, en un
 salto de tiempo de tamaño $\Delta t$:
+
 $$\Large S_{t+\Delta t} = S_t \exp\left[ \left( \mu - \frac{\sigma^2}{2} \right)\Delta t + \sigma\sqrt{\Delta t}\,Z \right]$$
 
 con $\large Z \sim N(0, 1)$;
