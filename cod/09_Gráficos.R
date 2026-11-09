@@ -39,6 +39,9 @@ etiquetas <- datos.plot %>%
   ungroup() %>%
   arrange(desc(Base100))
 
+fecha.corte <- as.Date("2026-08-31")
+
+
 grafico.serie.historica.1 <- ggplot(
   datos.plot,
   aes(
@@ -50,6 +53,27 @@ grafico.serie.historica.1 <- ggplot(
   
   geom_line(
     linewidth = 0.8
+  ) +
+  
+  geom_vline(
+    xintercept = fecha_corte,
+    color = "red",
+    linewidth = 0.7,
+    linetype = "dashed",
+    alpha = 0.3
+    
+  ) +
+  
+  annotate(
+    "text",
+    x = fecha_corte,
+    y = 700,
+    size = 3,
+    label = "31 agosto 2026",
+    color = "red",
+    vjust = 1.0,
+    hjust = -0.1,
+    alpha = 0.7
   ) +
   
   geom_text_repel(
@@ -75,8 +99,8 @@ grafico.serie.historica.1 <- ggplot(
   ) +
   
   labs(
-    title = "Evolución histórica de precios ajustados",
-    subtitle = "Grupo 1 de empresas seleccionadas",
+    title = "Evolución histórica de precios ajustados acciones",
+    subtitle = "(2016 - 2026)",
     x = "Año",
     y = "Precio acción USD"
   ) +
@@ -84,6 +108,7 @@ grafico.serie.historica.1 <- ggplot(
   theme_minimal(base_size = 13) +
   
   theme(
+    
     legend.position = "none",
     plot.title = element_text(
       face = "bold",
@@ -91,6 +116,11 @@ grafico.serie.historica.1 <- ggplot(
     ),
     plot.subtitle = element_text(
       hjust = 0.5
+    ),
+    panel.border = element_rect(
+      colour = "black",
+      fill = NA,
+      linewidth = 0.7
     )
   )
 
@@ -134,6 +164,27 @@ grafico.serie.historica.2 <- ggplot(
     linewidth = 0.8
   ) +
   
+  geom_vline(
+    xintercept = fecha_corte,
+    color = "red",
+    linewidth = 0.7,
+    linetype = "dashed",
+    alpha = 0.3
+    
+  ) +
+  
+  annotate(
+    "text",
+    x = fecha_corte,
+    y = 700,
+    size = 3,
+    label = "31 agosto 2026",
+    color = "red",
+    vjust = 1.0,
+    hjust = -0.1,
+    alpha = 0.7
+  ) +
+  
   geom_text_repel(
     data = etiquetas.2,
     aes(
@@ -157,8 +208,8 @@ grafico.serie.historica.2 <- ggplot(
   ) +
   
   labs(
-    title = "Evolución histórica de precios ajustados",
-    subtitle = "Grupo 2 de empresas seleccionadas",
+    title = "Evolución histórica de precios ajustados acciones",
+    subtitle = "(2016 - 2026)",
     x = "Año",
     y = "Precio acción USD"
   ) +
@@ -173,6 +224,11 @@ grafico.serie.historica.2 <- ggplot(
     ),
     plot.subtitle = element_text(
       hjust = 0.5
+    ),
+    panel.border = element_rect(
+      colour = "black",
+      fill = NA,
+      linewidth = 0.7
     )
   )
 
