@@ -85,7 +85,14 @@ Total.acciones.5 <- sum(cartera.5$delta)
 inversion == c(Vo.1, Vo.2, Vo.3, Vo.4, Vo.5)
 
 
-
+#Tickers en cada cartera:
+empresas.carteras <- cartera.1 %>% 
+  select(`Cartera 1`= Ticker) %>% 
+  mutate(`Cartera 2`= cartera.2$Ticker,
+        `Cartera 3`= cartera.3$Ticker,
+        `Cartera 4`= cartera.4$Ticker,
+        `Cartera 5`= cartera.5$Ticker) 
+  
 
 #Proyección carteras ----
 
@@ -111,7 +118,7 @@ median(V1.1, na.rm = T)
 
 sd(V1.1)
 
-quantiles.distribucion.1 <- quantile(V1.3, probs = c(0.05, 0.5, 0.95))
+quantiles.distribucion.1 <- quantile(V1.1, probs = c(0.05, 0.5, 0.95))
 
 
 ### Proyección Cartera 2 (poco volatil): ----
