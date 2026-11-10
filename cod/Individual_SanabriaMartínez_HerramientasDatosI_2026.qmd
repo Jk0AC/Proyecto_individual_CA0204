@@ -40,7 +40,7 @@ header-includes:
     #text(fill: rgb("#033e66"))[
       #grid(
         columns: (1fr, auto),
-        [Universidad de Costa Rica - Jean Carlo Sanabria Martínez],
+        [Universidad de Costa Rica #h(1em)-#h(1em) Jean Carlo Sanabria Martínez],
         [#counter(page).display()]
            )
          ]
@@ -130,7 +130,7 @@ Adémas empleamos estas fórmulas para el *retorno esperado* y *volatilidad hist
 
 $$\mu = \frac{E[r_t]}{\Delta t} + \frac{\sigma^2}{2} \quad,\qquad \sigma = sd\left(\ln\left(\frac{S_i}{S_{i-1}}\right)\right)\sqrt{252}$${#eq-volRet}
 
-se decidió simplificar $\mu$ si suponiendo que 
+asimismo se decidió simplificar $\mu$ suponiendo: 
 $E[r_t] = \bar r_t$
 
 ## Delimitación
@@ -158,7 +158,7 @@ $$C_{t,j} =\sum_{i=1}^6 \frac{W_i}{S_{0,i}}S_{t,i} \quad,\qquad con\quad Wi = I*
 )
 ] )
 ```
-[ *Nota: Veáse Anexo Gráfico 2 para observar correlaciones entre empresas.*]{style="font-size: 0.8em;"}
+[ *Nota: Veáse Anexo @fig-corr para observar correlaciones entre empresas.*]{style="font-size: 0.8em;"}
 
 
 ## Simulación Monte Carlo e indicadores de desempeño
@@ -174,7 +174,59 @@ Para comparar el desempeño de las carteras, se utilizaron cinco indicadores: el
 ```{r}
 source("06_Modelo_Lognormal_y_Monte_Carlo.R")
 source("07_Construcción_carteras.R")
+source("08_Gráficos.R")
 ```
+
+```{r}
+
+concentrada <- parametros %>%
+  filter(Ticker %in% cartera.4$Ticker)
+
+div <- parametros %>%
+  filter(Ticker %in% cartera.5$Ticker)
+
+
+comparacion.carteras.4.5 <- tibble(
+  Cartera = c("Concentrada", "Diversificada"),
+
+  `Retorno esperado (%)` = round(
+    100*c(
+      mean(concentrada$Retorno.esperado.anual),
+      mean(div$Retorno.esperado.anual)
+    ),
+    2
+  ),
+
+  `Volatilidad (%)` = round(
+    100*c(
+      mean(concentrada$Volatilidad.anual),
+      mean(div$Volatilidad.anual)
+    ),
+    2
+  )
+) %>% 
+  mutate(
+    `μ/σ` = round(`Retorno esperado (%)` / `Volatilidad (%)`, 2)
+  )
+
+kable(comparacion.carteras.4.5, align = c("l", "c", "c","c"))
+
+
+```
+
+```{r}
+#| label: fig-perc
+#| fig-cap: "Distribución simulada de resultados de carteras por perceptiles y valor esperado"
+#| fig-width: 9
+#| fig-height: 5.5
+
+grafico.perceptiles
+```
+
+## Alcance y limites del modelo
+
+Los resultados obtenidos deben interpretarse teniendo en cuenta las simplificaciones inherentes al modelo utilizado. En primer lugar, el **Movimiento Browniano Geométrico** asume **rendimientos logarítmicos normales**, **volatilidad** y **rendimientos esperados** constantes y la ausencia de saltos bruscos en los precios; condiciones que rara vez se cumplen plenamente en los mercados financieros reales. Asimismo, los **parámetros** de rendimiento esperado y volatilidad se estimaron a partir de **datos históricos**, bajo el supuesto de que el comportamiento pasado es representativo del desempeño futuro. Además, las simulaciones se realizaron asumiendo que los **activos son independientes**; por consiguiente, las correlaciones históricas observadas entre las empresas no se incorporaron explícitamente en el proceso estocástico. Esta simplificación puede conducir a una subestimación del riesgo en carteras concentradas y limitar una representación precisa de los beneficios reales de la diversificación. Por último, la muestra analizada se limitó a 18 empresas y las carteras se construyeron mediante asignaciones con ponderación igualitaria; por tanto, estos resultados no deben interpretarse como representativos de todo el universo del S&P 500 ni de estrategias de inversión optimizadas empledas en la realidad.
+
 
 # Bibliografía
 
@@ -240,40 +292,14 @@ Glasserman, P. (2004). Monte Carlo methods in financial engineering. Springer.
 ), caption: [Empresas seleccionadas para la muestra final] )<tbl-empresas>
 ```
  
+ 
 ```{r}
+#| label: fig-corr
+#| fig-cap: "Correlación de los retornos logarítmicos entre empresas de la muestra"
 
-concentrada <- parametros %>%
-  filter(Ticker %in% cartera.4$Ticker)
-
-div <- parametros %>%
-  filter(Ticker %in% cartera.5$Ticker)
-
-
-comparacion.carteras.4.5 <- tibble(
-  Cartera = c("Concentrada", "Diversificada"),
-
-  `Retorno esperado (%)` = round(
-    100*c(
-      mean(concentrada$Retorno.esperado.anual),
-      mean(div$Retorno.esperado.anual)
-    ),
-    2
-  ),
-
-  `Volatilidad (%)` = round(
-    100*c(
-      mean(concentrada$Volatilidad.anual),
-      mean(div$Volatilidad.anual)
-    ),
-    2
-  )
-) %>% 
-  mutate(
-    `μ/σ` = round(`Retorno esperado (%)` / `Volatilidad (%)`, 2)
-  )
-
-kable(comparacion.carteras.4.5, align = c("l", "c", "c","c"))
-
-
+#Grafico de correlación:
+grafico.corr.empresas()
 ```
+ 
+ 
 
