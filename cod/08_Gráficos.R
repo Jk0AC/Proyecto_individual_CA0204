@@ -391,7 +391,7 @@ grafico.perceptiles <- ggplot(
       label = scales::comma(round(`VaR (5%)`,0))
     ),
     hjust = 1.15,
-    size = 3.2,
+    size = 4,
     colour = "#B22222"
   )  +
   
@@ -402,7 +402,7 @@ grafico.perceptiles <- ggplot(
       label = scales::comma(round(`P95 (95%)`,0))
     ),
     hjust = -0.15,
-    size = 3.2,
+    size = 4,
     colour = "#2E8B57"
   ) +
   
@@ -432,7 +432,7 @@ grafico.perceptiles <- ggplot(
   coord_cartesian(
     xlim = c(
       85000,
-      210000
+      190000
     )
   ) +
 guides(
@@ -448,12 +448,17 @@ guides(
     y = NULL
   ) +
   
-  theme_minimal(base_size = 12) +
+  theme_minimal(base_size = 10) +
   
   theme(
+    axis.text.y  = element_text(size = 12, face = "bold"),
+    axis.text.x  = element_text(size = 11, face = "bold"),
+    axis.title.x = element_text(size = 12, face = "bold"),
+    legend.text  = element_text(size = 12),
     plot.title = element_text(
       face = "bold",
-      hjust = 0.5
+      hjust = 0.5,
+      size = 14,
     ),
     
     plot.subtitle = element_text(
