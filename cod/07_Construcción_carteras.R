@@ -215,8 +215,6 @@ V1.5 <- cartera.5.proyectada %>%
 #Métricas:
 
 
-median(V1.5, na.rm = T)
-
 sd(V1.5)
 
 quantiles.distribucion.5 <- quantile(V1.5, probs = c(0.05, 0.5, 0.95))
@@ -233,7 +231,6 @@ resumen.carteras <- bind_rows(
   .id = "Cartera"
 )
 
-median(V1.1)
 
 ## Intervalos de confianza: ----
 IC.esperanza <- resumen.carteras %>% 
