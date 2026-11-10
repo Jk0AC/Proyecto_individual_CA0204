@@ -1,15 +1,17 @@
 ---
-title: "Grup_7_HerramientasDatosI_2026"
+title: "Análisis de Carteras del S&P 500 mediante Simulación Monte Carlo y Movimiento Browniano Geométrico"
 subtitle: "Herramientas de Ciencias de Datos I"
+
+title-block-style: default
 
 author: |-
   Jean Carlo Sanabria Martínez — C37241 \
-  Universidad de Costa Rica, Escuela de Mátematica, Deoartamento de Ciencias Actuariales \
-  Ciudad Universitaria Rodrigo Facio, San Pedro de Montes de Oca, San José, Costa Rica \
-  Profesor: Luis Alberto Juárez Potoy
-  
-date: 2026-08-10
-date-format: long
+   Universidad de Costa Rica, Escuela de Mátematica, Departamento de    Ciencias Actuariales \
+   Ciudad Universitaria Rodrigo Facio, San Pedro de Montes de Oca,     San José, Costa Rica \
+   Profesor: Luis Alberto Juárez Potoy \
+   10 de agosto de 2026
+    
+
 lang: es
   
 format:  
@@ -17,11 +19,61 @@ format:
     papersize: a4
     fontsize: 12pt
     margin:
-      x: 1.8cm
-      y: 1.6cm
+       top: 2.2cm
+       bottom: 2.2cm
+       left: 2.2cm
+       right: 2.2cm
+       
+linestretch: 1.05
+
+header-includes:
+  - |
+    #set page(
+      
+    footer: context [
+    #line(
+     length: 100%,
+    stroke: (paint: rgb("#033e66"), thickness: 0.2pt)
+     )
+
+    #move(dy: -0.40cm)[
+    #text(fill: rgb("#033e66"))[
+      #grid(
+        columns: (1fr, auto),
+        [Universidad de Costa Rica - Jean Carlo Sanabria Martínez],
+        [#counter(page).display()]
+           )
+         ]
+       ]
+    ]
+      )
+      
+    
+    #show heading.where(level: 2): set text(
+      fill: rgb("#033e66")
+    )
+    
+    
+    #show heading.where(level: 1): set text(
+      fill: rgb("#033e66")
+    )
+    
+    
+    #set par(spacing: 1em)
+      
+execute:
+  include: false
+  warning: false
+  message: false
+editor: 
+  markdown: 
+    wrap: 72
+    
+highlight-style: arrow
 ---
 
 ```{r}
+
 source("01_carga_librerias.R")
 source("02_funciones_auxiliares.R")
 ```
@@ -45,29 +97,41 @@ source("03_Revisión_y_depuración_data.R")
 
 # Introducción
 
+La modelización estocástica de los precios de los activos financieros constituye una herramienta fundamental para el análisis de inversiones, la gestión de riesgos y la valoración de instrumentos financieros. Entre los modelos más utilizados destaca el **Movimiento Browniano Geométrico (MBG)**, un proceso estocástico de tiempo continuo que describe la evolución de los precios mediante una combinación de crecimiento esperado y volatilidad aleatoria. Su desarrollo se fundamenta en los trabajos pioneros sobre movimiento browniano aplicados a las finanzas y adquirió especial relevancia tras su incorporación en el modelo de valoración de opciones de *Black y Scholes* (Black & Scholes, 1973; Hull, 2022).
+
+El **MBG** se ha convertido en una de las herramientas más empleadas para la simulación *Monte Carlo* de precios de activos debido a su capacidad para garantizar precios positivos y representar de forma consistente la incertidumbre inherente a los mercados financieros (Shreve, 2004). Sus aplicaciones abarcan la valoración de derivados, la gestión de portafolios, el análisis de riesgo y la estimación de escenarios futuros de inversión.
+
+En este contexto, el presente estudio utiliza el GBM para proyectar la evolución de una muestra de acciones pertenecientes al índice S&P 500 y analizar el comportamiento de distintas estrategias de cartera. A través de simulaciones Monte Carlo se evalúan indicadores de desempeño y riesgo, tales como el **valor esperado, la probabilidad de pérdida** y el **Valor en Riesgo (VaR)**, con el propósito de examinar el impacto de la **volatilidad** y la diversificación sobre los resultados futuros de inversión.
+
+El dataset utilizado en el proyecto es el siguiente: [S&P 500 US Stock Market Data 2026](https://www.kaggle.com/datasets/parsalatifi/s-and-p-500-us-stock-market-data). 
+
+Este dataset contiene información histórica diaria, unificada, sobre el mercado bursátil de 233 de las principales empresas estadounidenses que cotizan en bolsa, seleccionadas a partir del índice S&P 500. Tiene como periodo de cobertura el 12/31/1979 hasta el 08/31/2026 y fue extraído de la base de datasets de la página web [Kaggle](https://www.kaggle.com/datasets). Los datos históricos diarios brutos del mercado se recopilaron mediante programación a través de la API de yfinance, extrayendo métricas oficiales de negociación directamente de las bolsas *NASDAQ y NYSE*.
+
 # Objetivo
 
+Analizar el desempeño de distintas estrategias de inversión sobre la compra de acciones del S&P 500, cuando los precios futuros se modelan mediante el Movimiento Browniano Geómetrico (MBG) a través de simulaciones Monte Carlo.
+
 # Metodologia
+## Fórmulas del MBG
+Usamos la ecuación de simulación exacta del **Movimiento Browniano Geométrico (MBG)** para proyectar el valor de la acción de una empresa en t, en un
+salto de tiempo de tamaño $\Delta t$ (Hull, 2022; Shreve, 2004):
 
-Usamos la ecuación de simulación exacta del Geometric Brownian Motion
-(GBM) para proyectar el valor de la acción de una empresa en t, en un
-salto de tiempo de tamaño $\Delta t$:
+$$
+S_{t+\Delta t} = S_t \exp\left[ \left( \mu - \frac{\sigma^2}{2} \right)\Delta t + \sigma\sqrt{\Delta t}\,Z \right]
+$$ {#eq-gbm}
 
-$$\Large S_{t+\Delta t} = S_t \exp\left[ \left( \mu - \frac{\sigma^2}{2} \right)\Delta t + \sigma\sqrt{\Delta t}\,Z \right]$$
+con $Z \sim N(0, 1)$;
 
-con $\large Z \sim N(0, 1)$;
+$\mu\quad:$ Retorno esperado de la acción por año;
 
-$\Large\mu$: Retorno esperado de la acción por año;
+$\sigma\quad:$ Volatilidad histórica de la acción anualizada.
 
-$\Large\sigma$: Volatilidad de la acción anualizada.
+Adémas empleamos estas fórmulas para el *retorno esperado* y *volatilidad histórica*:
 
-Fórmula $\Large\mu$:
+$$\mu = \frac{E[r_t]}{\Delta t} + \frac{\sigma^2}{2} \quad,\qquad \sigma = sd\left(\ln\left(\frac{S_i}{S_{i-1}}\right)\right)\sqrt{252}$${#eq-volRet}
 
-$$\large \mu = \frac{E\left[r_t \right]}{\Delta t} + \frac{\sigma^2}{2}$$
-podemos simplifica esta expresión si suponemos que
-$\large E\left[r_t \right] = \overline{r_t}$
-
-$$\large \sigma = {sd}\left(\ln \left(\frac{S_i}{S_{i-1}} \right)\right)\sqrt{252} $$
+podemos simplificar $\mu$ si suponemos que 
+$E[r_t] = \bar r_t$
 
 ```{=typst}
 #table(
@@ -84,6 +148,10 @@ $$\large \sigma = {sd}\left(\ln \left(\frac{S_i}{S_{i-1}} \right)\right)\sqrt{25
   [Diversificada], [Acciones poca correlación]
 )
 ```
+## Delimitación
+A  próposito de simplificación y de eficiencia programática se tomó la decisión de delimitar el periodo abarcado y de escoger una muestra reducida de empresas para nuestro estudio. Se  selecciona la data de los últimos 10 años registrados, desde 01-01-2016 hasta la última fecha del 2026, asimismo mediante el cálculo de la volatilidad histórica @eq-volRet, las empresas se clasificaron en tres, cómo de: alta, media y baja volatilidad, además se uso la columna `Volume`, que contiene la cantidad tranzada de acciones por *trading day* multiplicada por el precio ajustado de la acción, para calcular el `Volumen de transacción`, para análogamente agruparlas en: alto, medio y bajo volumen. Con estos dos criterios formamos 9 grupos, ordenados por volatilidad, de los cuáles se agarra al primero y último de grupo para construir una muestra de 18 empresas (ver Tabla 1 en Anexos), suficientemente diversa y representativa del mercado financiero y al mismo tiempo compacta para optimizar resultados y análisis.
+
+## Construcción de carteras
 # Resultados
 
 ```{r}
@@ -93,9 +161,17 @@ source("07_Construcción_carteras.R")
 
 # Bibliografía
 
+Black, F., & Scholes, M. (1973). The pricing of options and corporate liabilities. Journal of Political Economy, 81(3), 637-654. https://doi.org/10.1086/260062
+
+Hull, J. C. (2022). Options, futures, and other derivatives (11th ed.). Pearson.
+
+Shreve, S. E. (2004). Stochastic calculus for finance II: Continuous-time models. Springer.
+
+
+
 # Anexos
 
-```{r}
+```{r, echo=TRUE}
 tabla.empresas <- tibble(
   Ticker = empresas.muestra,
   Empresa = c(
