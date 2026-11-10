@@ -233,7 +233,7 @@ resumen.carteras <- bind_rows(
   .id = "Cartera"
 )
 
-
+median(V1.1)
 
 ## Intervalos de confianza: ----
 IC.esperanza <- resumen.carteras %>% 

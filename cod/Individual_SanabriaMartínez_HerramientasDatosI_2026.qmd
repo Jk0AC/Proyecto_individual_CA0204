@@ -62,7 +62,7 @@ header-includes:
     #set par(spacing: 1em)
       
 execute:
-  include: false
+  echo: false
   warning: false
   message: false
 editor: 
@@ -79,6 +79,7 @@ source("02_funciones_auxiliares.R")
 ```
 
 ```{r}
+
 #Lectura data: 
 
 stock.price.raw <- read_csv("../data/master_stock_data.csv")
@@ -87,7 +88,7 @@ stock.price.raw <- read_csv("../data/master_stock_data.csv")
 ```
 
 ```{r}
-
+#| include: false
 source("03_Revisión_y_depuración_data.R")
 source("04_Información_descriptiva_data.R")
 source("05_Correlaciones_empresas.R")
@@ -103,9 +104,8 @@ El **MBG** se ha convertido en una de las herramientas más empleadas para la si
 
 En este contexto, el presente estudio utiliza el GBM para proyectar la evolución de una muestra de acciones pertenecientes al índice S&P 500 y analizar el comportamiento de distintas estrategias de cartera. A través de simulaciones Monte Carlo se evalúan indicadores de desempeño y riesgo, tales como el **valor esperado, la probabilidad de pérdida** y el **Valor en Riesgo (VaR)**, con el propósito de examinar el impacto de la **volatilidad** y la diversificación sobre los resultados futuros de inversión.
 
-El dataset utilizado en el proyecto es el siguiente: [S&P 500 US Stock Market Data 2026](https://www.kaggle.com/datasets/parsalatifi/s-and-p-500-us-stock-market-data). 
+Para ello, se emplea el conjunto de datos [S&P 500 US Stock Market Data 2026](https://www.kaggle.com/datasets/parsalatifi/s-and-p-500-us-stock-market-data), obtenido de [Kaggle](https://www.kaggle.com/datasets) y construido a partir de información histórica diaria recopilada mediante la API de yfinance para 233 empresas del mercado estadounidense durante el período 1979-2026.
 
-Este dataset contiene información histórica diaria, unificada, sobre el mercado bursátil de 233 de las principales empresas estadounidenses que cotizan en bolsa, seleccionadas a partir del índice S&P 500. Tiene como periodo de cobertura el 12/31/1979 hasta el 08/31/2026 y fue extraído de la base de datasets de la página web [Kaggle](https://www.kaggle.com/datasets). Los datos históricos diarios brutos del mercado se recopilaron mediante programación a través de la API de yfinance, extrayendo métricas oficiales de negociación directamente de las bolsas *NASDAQ y NYSE*.
 
 # Objetivo
 
@@ -130,28 +130,45 @@ Adémas empleamos estas fórmulas para el *retorno esperado* y *volatilidad hist
 
 $$\mu = \frac{E[r_t]}{\Delta t} + \frac{\sigma^2}{2} \quad,\qquad \sigma = sd\left(\ln\left(\frac{S_i}{S_{i-1}}\right)\right)\sqrt{252}$${#eq-volRet}
 
-podemos simplificar $\mu$ si suponemos que 
+se decidió simplificar $\mu$ si suponiendo que 
 $E[r_t] = \bar r_t$
 
+## Delimitación
+Con el propósito de mejorar la eficiencia computacional, el estudio se delimitó al período 2016-2026 y a una muestra reducida de empresas. Las acciones fueron clasificadas según su volatilidad histórica **[Ec. @eq-volRet]** y su volumen de transacción, agrupándolas en niveles alto, medio y bajo para cada criterio. La combinación de ambas variables permitió formar nueve grupos de clasificación. Finalmente, se seleccionaron las empresas ubicadas en los extremos de cada grupo, obteniéndose una muestra de 18 acciones [Véase @tbl-empresas], suficientemente diversa para representar distintos perfiles del mercado y lo bastante compacta para facilitar las simulaciones y el análisis posterior.
+
+## Construcción de carteras
+Para el análisis se construyeron cinco carteras, con una inversión inical de $I = 102 000$ de dólares en *t = 0 (fecha: 08-31-2026)*, cada una compuesta por seis empresas y $w = \frac{1}{6}$ el peso de la invérsión en cada una. Por lo que tendríamos 5 canteras con $S_{0,i}$ el último precio del cierre ajustado de cada empresa, con la siguiente composición:
+
+$$C_{t,j} =\sum_{i=1}^6 \frac{W_i}{S_{0,i}}S_{t,i} \quad,\qquad con\quad Wi = I*w = 17 000$${#eq-cartera}
+
+*Carteracterísticas de selección carteras:*
 ```{=typst}
-#table(
-  columns: (1fr, 1fr),
-  stroke: 0.5pt + gray,
-  inset: 8pt,
+#align(left, text(size: 11pt)[ #table( columns:  (3cm, 5cm), stroke: 0.5pt + gray, inset: 4pt,
 
-  [*Cartera*], [*Característica*],
-
+  table.cell(fill: rgb("#1F4E79"))[#text(fill: white)[*Cartera*]],
+  table.cell(fill: rgb("#1F4E79"))[#text(fill: white)[*Característica*]],
+  
+   table.cell(colspan: 2, fill: rgb("#DCE6F1"))[*Por volatilidad*],
   [Conservadora], [Baja volatilidad],
   [Moderada], [Volatilidad media],
   [Agresiva], [Alta volatilidad],
+   table.cell(colspan: 2, fill: rgb("#DCE6F1"))[*Por diversificación*],
   [Concentrada], [Acciones mucha correlación],
   [Diversificada], [Acciones poca correlación]
 )
+] )
 ```
-## Delimitación
-A  próposito de simplificación y de eficiencia programática se tomó la decisión de delimitar el periodo abarcado y de escoger una muestra reducida de empresas para nuestro estudio. Se  selecciona la data de los últimos 10 años registrados, desde 01-01-2016 hasta la última fecha del 2026, asimismo mediante el cálculo de la volatilidad histórica @eq-volRet, las empresas se clasificaron en tres, cómo de: alta, media y baja volatilidad, además se uso la columna `Volume`, que contiene la cantidad tranzada de acciones por *trading day* multiplicada por el precio ajustado de la acción, para calcular el `Volumen de transacción`, para análogamente agruparlas en: alto, medio y bajo volumen. Con estos dos criterios formamos 9 grupos, ordenados por volatilidad, de los cuáles se agarra al primero y último de grupo para construir una muestra de 18 empresas (ver Tabla 1 en Anexos), suficientemente diversa y representativa del mercado financiero y al mismo tiempo compacta para optimizar resultados y análisis.
+[ *Nota: Veáse Anexo Gráfico 2 para observar correlaciones entre empresas.*]{style="font-size: 0.8em;"}
 
-## Construcción de carteras
+
+## Simulación Monte Carlo e indicadores de desempeño
+
+La simulación de Montecarlo consiste en la generación reiterada de escenarios aleatorios equiprobables para aproximar la distribución futura de una variable de interés. En este estudio, cada trayectoria de precios se obtuvo mediante un **MBG**, empleando variables aleatorias independientes $Z \sim N(0,1)$ generadas para cada activo y periodo de simulación. A partir de 10 000 trayectorias, por empresa, se construyeron las distribuciones de los valores futuros, a un año desde la última fecha registrada, para las distintas carteras, lo que permitió evaluar la incertidumbre asociada a cada estrategia de inversión (Hull, 2022; Shreve, 2004).
+
+Para comparar el desempeño de las carteras, se utilizaron cinco indicadores: el valor esperado, como medida del rendimiento promedio; el **Valor en Riesgo (VaR) al 5 %**, derivado del *percentil 5* de la distribución simulada; la **probabilidad de pérdida**, definida como la proporción de simulaciones en las que el valor final es inferior a la inversión inicial; y los errores estándar del valor esperado y de la probabilidad de pérdida, los cuales sirven para cuantificar la precisión estadística de las estimaciones obtenidas mediante el método de Montecarlo (Glasserman, 2004).
+
+*Los shocks aleatorios fueron generados mediante la función rnorm() del software R (R Core Team, 2025).*
+
 # Resultados
 
 ```{r}
@@ -167,58 +184,62 @@ Hull, J. C. (2022). Options, futures, and other derivatives (11th ed.). Pearson.
 
 Shreve, S. E. (2004). Stochastic calculus for finance II: Continuous-time models. Springer.
 
+Glasserman, P. (2004). Monte Carlo methods in financial engineering. Springer.
+
 
 
 # Anexos
 
-```{r, echo=TRUE}
-tabla.empresas <- tibble(
-  Ticker = empresas.muestra,
-  Empresa = c(
-    "Tesla, Inc.",
-    "Apple Inc.",
-    "JPMorgan Chase & Co.",
-    "Target Corporation",
-    "Linde Group",
-    "American Express Company",
-    "Charles Schwab Corporation",
-    "Chipotle Mexican Grill, Inc.",
-    "Lockheed Martin Corporation",
-    "Warner Bros. Discovery, Inc.",
-    "Constellation Brands, Inc.",
-    "Southern Company",
-    "United Rentals, Inc.",
-    "Duke Energy Corporation",
-    "Parker-Hannifin Corporation",
-    "ResMed Inc.",
-    "The Cooper Companies, Inc.",
-    "STERIS plc"
-  ),
-  `Sector GICS` = c(
-    "Consumo cíclico",
-    "Tecnología",
-    "Financiero",
-    "Consumo básico",
-    "Materiales",
-    "Financiero",
-    "Financiero",
-    "Consumo cíclico",
-    "Industriales",
-    "Servicios de Comunicación",
-    "Consumo básico",
-    "Servicios de Utilidad Pública",
-    "Industriales",
-    "Servicios de Utilidad Pública",
-    "Industriales",
-	"Cuidado de la Salud",
-	"Cuidado de la Salud",
-	"Cuidado de la Salud"
+
+```{=typst}
+#figure(align(center,
+  table(
+    columns: (3cm, 8cm),
+    stroke: 0.4pt + gray,
+    inset: 4pt,
+
+    table.cell(fill: rgb("#1F4E79"))[#text(fill: white)[*Ticker*]],
+    table.cell(fill: rgb("#1F4E79"))[#text(fill: white)[*Empresa*]],
+
+    table.cell(colspan: 2, fill: rgb("#DCE6F1"))[*Tecnología*],
+    [AAPL], [Apple Inc.],
+
+    table.cell(colspan: 2, fill: rgb("#DCE6F1"))[*Financiero*],
+    [JPM], [JPMorgan Chase & Co.],
+    [AXP], [American Express Company],
+    [SCHW], [Charles Schwab Corporation],
+
+    table.cell(colspan: 2, fill: rgb("#DCE6F1"))[*Consumo cíclico*],
+    [TSLA], [Tesla, Inc.],
+    [CMG], [Chipotle Mexican Grill, Inc.],
+
+    table.cell(colspan: 2, fill: rgb("#DCE6F1"))[*Consumo básico*],
+    [TGT], [Target Corporation],
+    [STZ], [Constellation Brands, Inc.],
+
+    table.cell(colspan: 2, fill: rgb("#DCE6F1"))[*Materiales*],
+    [LIN], [Linde Group],
+
+    table.cell(colspan: 2, fill: rgb("#DCE6F1"))[*Industriales*],
+    [LMT], [Lockheed Martin Corporation],
+    [URI], [United Rentals, Inc.],
+    [PH], [Parker-Hannifin Corporation],
+
+    table.cell(colspan: 2, fill: rgb("#DCE6F1"))[*Servicios de Comunicación*],
+    [WBD], [Warner Bros. Discovery, Inc.],
+
+    table.cell(colspan: 2, fill: rgb("#DCE6F1"))[*Servicios de Utilidad Pública*],
+    [SO], [Southern Company],
+    [DUK], [Duke Energy Corporation],
+
+    table.cell(colspan: 2, fill: rgb("#DCE6F1"))[*Cuidado de la Salud*],
+    [RMD], [ResMed Inc.],
+    [COO], [The Cooper Companies, Inc.],
+    [STE], [STERIS plc]
   )
-) %>% arrange(desc(`Sector GICS`))
-
-sectores <- tabla.empresas %>% count(`Sector GICS`) # 9 de 11 sectores.
+), caption: [Empresas seleccionadas para la muestra final] )<tbl-empresas>
 ```
-
+ 
 ```{r}
 
 concentrada <- parametros %>%
