@@ -67,6 +67,9 @@ resumen.cartera <- function(V1, Vo = 102000){
   # VaR empírico (percentil 5%)
   VaR <- quantile(V1, probs = 0.05)
   
+  # Mediana (percentil 50%)
+  mediana <- quantile(V1, probs = 0.50)
+  
   # Probabilidad de pérdida
   prob.perdida <- mean(V1 < Vo)
   
@@ -82,6 +85,7 @@ resumen.cartera <- function(V1, Vo = 102000){
   tibble::tibble(
     `Valor esperado` = valor.esperado,
     `VaR (5%)` = as.numeric(VaR),
+    `Mediana (50%)` = as.numeric(mediana),
     `Probabilidad pérdida` = prob.perdida,
     `EE esperanza` = EE.esperanza,
     `EE prob pérdida` = EE.prob.perdida
