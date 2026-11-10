@@ -316,7 +316,7 @@ grafico.corr.empresas <- function(){
     order = "hclust",
     hclust.method = "complete",
     addrect = 3,
-    title = "Correlacion entre los rendimientos de las empresas",
+    title = "",
     tl.col = "#05235c",
     tl.cex = 0.9,
     rect.col = "#05235c",
