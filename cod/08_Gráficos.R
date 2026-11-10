@@ -37,7 +37,7 @@ grafico.muestra <- ggplot(
   
   geom_tile(
     color = "white",
-    linewidth = 0.8
+    linewidth = 1
   ) +
   
   geom_text(
@@ -125,7 +125,7 @@ grafico.serie.historica.1 <- ggplot(
   ) +
   
   geom_vline(
-    xintercept = fecha_corte,
+    xintercept = fecha.corte,
     color = "red",
     linewidth = 0.7,
     linetype = "dashed",
@@ -135,7 +135,7 @@ grafico.serie.historica.1 <- ggplot(
   
   annotate(
     "text",
-    x = fecha_corte,
+    x = fecha.corte,
     y = 700,
     size = 3,
     label = "31 agosto 2026",
@@ -234,7 +234,7 @@ grafico.serie.historica.2 <- ggplot(
   ) +
   
   geom_vline(
-    xintercept = fecha_corte,
+    xintercept = fecha.corte,
     color = "red",
     linewidth = 0.7,
     linetype = "dashed",
@@ -244,7 +244,7 @@ grafico.serie.historica.2 <- ggplot(
   
   annotate(
     "text",
-    x = fecha_corte,
+    x = fecha.corte,
     y = 700,
     size = 3,
     label = "31 agosto 2026",
@@ -304,25 +304,23 @@ grafico.serie.historica.2 <- ggplot(
 
 
 
-muestra.volt$Ticker
-
-
-
-
 ##Grafico de calor con correlaciones empresas: ----
 
 diag(matriz.cor) <- 1
 
-grafico.corr.empresas <- corrplot(
-  matriz.cor,
-  method = "color",
-  order = "hclust",
-  hclust.method = "complete",
-  addrect = 3,
-  title = "Correlacion entre los rendimientos de las empresas", 
-  tl.col = "#05235c",
-  tl.cex = 0.9,
-  rect.col = "#05235c",
-  mar = c(0,0,2,0)
-)
-
+grafico.corr.empresas <- function(){
+  
+  corrplot(
+    matriz.cor,
+    method = "color",
+    order = "hclust",
+    hclust.method = "complete",
+    addrect = 3,
+    title = "Correlacion entre los rendimientos de las empresas",
+    tl.col = "#05235c",
+    tl.cex = 0.9,
+    rect.col = "#05235c",
+    mar = c(0,0,2,0)
+  )
+  
+}
