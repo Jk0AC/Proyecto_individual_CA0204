@@ -70,6 +70,9 @@ resumen.cartera <- function(V1, Vo = 102000){
   # Mediana (percentil 50%)
   mediana <- quantile(V1, probs = 0.50)
   
+  #Perceptil 95 escenario optimista
+  P95 <- quantile(V1, probs = 0.95)
+  
   # Probabilidad de pérdida
   prob.perdida <- mean(V1 < Vo)
   
@@ -86,6 +89,7 @@ resumen.cartera <- function(V1, Vo = 102000){
     `Valor esperado` = valor.esperado,
     `VaR (5%)` = as.numeric(VaR),
     `Mediana (50%)` = as.numeric(mediana),
+    `P95 (95%)` = as.numeric(P95),
     `Probabilidad pérdida` = prob.perdida,
     `EE esperanza` = EE.esperanza,
     `EE prob pérdida` = EE.prob.perdida
