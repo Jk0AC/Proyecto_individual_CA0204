@@ -2,6 +2,87 @@
 
 #Graficos: ----
 
+
+
+## Graficos elección empresas: ----
+
+
+heatmap.muestra <- muestra %>%
+  summarise(
+    Empresas = paste(Ticker, collapse = ", "),
+    n = n(),
+    .by = Grupo
+  ) %>%
+  tidyr::separate(Grupo,
+                  into = c("Volumen", "Volatilidad"),
+                  sep = " \\| ") %>%
+  mutate(
+    Volatilidad = factor(Volatilidad, levels = c("Baja σ", "Media σ", "Alta σ")),
+    
+    Volumen = factor(
+      Volumen,
+      levels = c("Alto volumen", "Medio volumen", "Bajo volumen")
+    )
+  )
+
+
+grafico.muestra <- ggplot(
+  heatmap.muestra,
+  aes(
+    x = Volatilidad,
+    y = Volumen,
+    fill = Volatilidad
+  )
+) +
+  
+  geom_tile(
+    color = "white",
+    linewidth = 0.8
+  ) +
+  
+  geom_text(
+    aes(label = Empresas),
+    size = 4,
+    fontface = "bold",
+    color = "white"
+  ) +
+  
+  scale_fill_manual(
+    name = "Volatilidad:",
+    values = c(
+      "Baja σ"  = "#2ECC71",
+      "Media σ" = "#F4D03F",
+      "Alta σ"  = "#E74C3C"
+    ),
+    breaks = c(
+      "Baja σ",
+      "Media σ",
+      "Alta σ"
+    )
+  ) +
+  
+  labs(
+    title = "Selección de empresas por volatilidad y volumen",
+    y = "Clasificación de volumen",
+    x = NULL
+  ) +
+  
+  theme_minimal(base_size = 12) +
+  
+  theme(
+    panel.grid = element_blank(),
+    
+    axis.text.x = element_blank(),
+    axis.ticks.x = element_blank(),
+    
+    legend.position = "bottom",
+    
+    plot.title = element_text(
+      hjust = 0.5,
+      face = "bold"
+    )
+  )
+
 ##Graficos serie histórica precio: ----
 
 #Ordenados por volatilidad:
