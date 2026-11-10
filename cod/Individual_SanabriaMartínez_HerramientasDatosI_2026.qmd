@@ -1,0 +1,196 @@
+---
+title: "Grup_7_HerramientasDatosI_2026"
+subtitle: "Herramientas de Ciencias de Datos I"
+
+author: |-
+  Jean Carlo Sanabria Martínez — C37241 \
+  Universidad de Costa Rica, Escuela de Mátematica, Deoartamento de Ciencias Actuariales \
+  Ciudad Universitaria Rodrigo Facio, San Pedro de Montes de Oca, San José, Costa Rica \
+  Profesor: Luis Alberto Juárez Potoy \
+  
+date: 2026-08-10
+date-format: long
+lang: es
+  
+format:  
+  typst:
+    papersize: a4
+    margin:
+      x: 1.8cm
+      y: 1.6cm
+    fontsize: 12pt
+
+execute:
+  echo: false
+  warning: false
+  message: false
+editor: 
+  markdown: 
+    wrap: 72
+---
+
+```{r}
+source("01_carga_librerias.R")
+source("02_funciones_auxiliares.R")
+```
+
+```{r}
+#Lectura data: 
+
+stock.price.raw <- read_csv("../data/master_stock_data.csv")
+
+
+```
+
+```{r}
+
+source("03_Revisión_y_depuración_data.R")
+source("04_Información_descriptiva_data.R")
+source("05_Correlaciones_empresas.R")
+source("03_Revisión_y_depuración_data.R")
+
+```
+
+
+# Introducción
+
+
+
+# Objetivo
+
+# Metodologia
+
+Usamos la ecuación de simulación exacta del Geometric Brownian Motion
+(GBM) para proyectar el valor de la acción de una empresa en t, en un
+salto de tiempo de tamaño $\Delta t$:
+
+$$\Large S_{t+\Delta t} = S_t \exp\left[ \left( \mu - \frac{\sigma^2}{2} \right)\Delta t + \sigma\sqrt{\Delta t}\,Z \right]$$
+
+con $\large Z \sim N(0, 1)$;
+
+$\Large\mu$: Retorno esperado de la acción por año;
+
+$\Large\sigma$: Volatilidad de la acción anualizada.
+
+Fórmula $\Large\mu$:
+
+$$\large \mu = \frac{E\left[r_t \right]}{\Delta t} + \frac{\sigma^2}{2}$$
+podemos simplifica esta expresión si suponemos que
+$\large E\left[r_t \right] = \overline{r_t}$
+
+$$\large \sigma = {sd}\left(\ln \left(\frac{S_i}{S_{i-1}} \right)\right)\sqrt{252} $$
+
+```{=typst}
+#table(
+  columns: (1fr, 1fr),
+  stroke: 0.5pt + gray,
+  inset: 8pt,
+
+  [*Cartera*], [*Característica*],
+
+  [Conservadora], [Baja volatilidad],
+  [Moderada], [Volatilidad media],
+  [Agresiva], [Alta volatilidad],
+  [Concentrada], [Acciones mucha correlación],
+  [Diversificada], [Acciones poca correlación]
+)
+```
+
+
+# Resultados
+
+```{r}
+source("06_Modelo_Lognormal_y_Monte_Carlo.R")
+source("07_Construcción_carteras.R")
+```
+
+
+# Bibliografía
+ 
+# Anexos
+
+```{r}
+tabla.empresas <- tibble(
+  Ticker = empresas.muestra,
+  Empresa = c(
+    "Tesla, Inc.",
+    "Apple Inc.",
+    "JPMorgan Chase & Co.",
+    "Target Corporation",
+    "Linde Group",
+    "American Express Company",
+    "Charles Schwab Corporation",
+    "Chipotle Mexican Grill, Inc.",
+    "Lockheed Martin Corporation",
+    "Warner Bros. Discovery, Inc.",
+    "Constellation Brands, Inc.",
+    "Southern Company",
+    "United Rentals, Inc.",
+    "Duke Energy Corporation",
+    "Parker-Hannifin Corporation",
+    "ResMed Inc.",
+    "The Cooper Companies, Inc.",
+    "STERIS plc"
+  ),
+  `Sector GICS` = c(
+    "Consumo cíclico",
+    "Tecnología",
+    "Financiero",
+    "Consumo básico",
+    "Materiales",
+    "Financiero",
+    "Financiero",
+    "Consumo cíclico",
+    "Industriales",
+    "Servicios de Comunicación",
+    "Consumo básico",
+    "Servicios de Utilidad Pública",
+    "Industriales",
+    "Servicios de Utilidad Pública",
+    "Industriales",
+	"Cuidado de la Salud",
+	"Cuidado de la Salud",
+	"Cuidado de la Salud"
+  )
+) %>% arrange(desc(`Sector GICS`))
+
+sectores <- tabla.empresas %>% count(`Sector GICS`) # 9 de 11 sectores.
+```
+
+
+```{r}
+
+alta <-  parametros %>%
+  filter(Ticker %in% cartera.1$Ticker)
+
+mean(alta$Retorno.esperado.anual)
+mean(alta$Volatilidad.anual)
+
+
+
+concentrada <- parametros %>%
+  filter(Ticker %in% cartera.4$Ticker)
+
+concentrada %>% summarise(
+  Cartera = "Cartera concentrada",
+  "Volatilidad Media" = mean(Volatilidad.anual, na.rm = T),
+  "Retorno Medio" = mean(Retorno.esperado.anual, na.rm = T)
+)
+
+mean(concentrada$Retorno.esperado.anual)
+mean(concentrada$Volatilidad.anual)
+
+div <- parametros %>%
+  filter(Ticker %in% cartera.5$Ticker)
+mean(div$Retorno.esperado.anual)
+mean(div$Volatilidad.anual)
+
+
+
+
+
+```
+
+
+
+

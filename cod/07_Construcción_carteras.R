@@ -91,7 +91,8 @@ empresas.carteras <- cartera.1 %>%
   mutate(`Cartera 2`= cartera.2$Ticker,
         `Cartera 3`= cartera.3$Ticker,
         `Cartera 4`= cartera.4$Ticker,
-        `Cartera 5`= cartera.5$Ticker) 
+        `Cartera 5`= cartera.5$Ticker)
+
   
 
 #Proyección carteras ----
