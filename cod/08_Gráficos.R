@@ -324,3 +324,148 @@ grafico.corr.empresas <- function(){
   )
   
 }
+
+
+## Grafico resumen estadístico resultados de carteras: ----
+
+
+
+
+grafico.perceptiles <- ggplot(
+  resumen.carteras %>%
+    mutate(
+      Distancia = `P95 (95%)` - `VaR (5%)`
+    ) %>%
+    arrange(desc(Distancia)),
+  aes(
+    y = reorder(Cartera, Distancia)
+  )
+) +
+  
+  geom_segment(
+    aes(
+      x = `VaR (5%)`,
+      xend = `P95 (95%)`,
+      yend = Cartera
+    ),
+    linewidth = 1.3,
+    color = "grey70"
+  ) +
+  
+  geom_point(
+    aes(
+      x = `VaR (5%)`,
+      color = "VaR (5%)"
+    ),
+    size = 4
+  ) +
+  
+  geom_point(
+    aes(
+      x = `Mediana (50%)`,
+      color = "Mediana (50%)"
+    ),
+    size = 4
+  ) +
+  
+  geom_point(
+    aes(
+      x = `Valor esperado`,
+      color = "Valor esperado"
+    ),
+    size = 4
+  ) +
+  
+  geom_point(
+    aes(
+      x = `P95 (95%)`,
+      color = "P95 (95%)"
+    ),
+    size = 4
+  ) +
+  
+  # Etiquetas VaR
+  geom_text(
+    aes(
+      x = `VaR (5%)`,
+      label = scales::comma(round(`VaR (5%)`,0))
+    ),
+    hjust = 1.15,
+    size = 3.2,
+    colour = "#B22222"
+  )  +
+  
+  # Etiquetas P95
+  geom_text(
+    aes(
+      x = `P95 (95%)`,
+      label = scales::comma(round(`P95 (95%)`,0))
+    ),
+    hjust = -0.15,
+    size = 3.2,
+    colour = "#2E8B57"
+  ) +
+  
+  scale_color_manual(
+    name = NULL,
+    values = c(
+      "VaR (5%)" = "#B22222",
+      "Mediana (50%)" = "#E69F00",
+      "Valor esperado" = "#1F4E79",
+      "P95 (95%)" = "#2E8B57"
+    )
+  ) +
+  
+  scale_x_continuous(
+    labels = scales::comma,
+    breaks = c(
+      100000,
+      120000,
+      140000,
+      160000,
+      180000,
+      200000
+    ),
+    expand = expansion(mult = c(0.01, 0.01))
+  ) +
+  
+  coord_cartesian(
+    xlim = c(
+      85000,
+      210000
+    )
+  ) +
+guides(
+  color = guide_legend(
+    override.aes = list(size = 5)
+  )
+)+
+  
+  labs(
+    title = "",
+    subtitle = "",
+    x = "Valor final de la cartera (USD)",
+    y = NULL
+  ) +
+  
+  theme_minimal(base_size = 12) +
+  
+  theme(
+    plot.title = element_text(
+      face = "bold",
+      hjust = 0.5
+    ),
+    
+    plot.subtitle = element_text(
+      hjust = 0.5
+    ),
+    
+    legend.position = "bottom",
+    
+    panel.border = element_rect(
+      colour = "black",
+      fill = NA
+    ),
+    
+    panel.grid.minor = element_blank()
+  )
