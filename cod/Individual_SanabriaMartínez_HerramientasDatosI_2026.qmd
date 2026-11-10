@@ -6,7 +6,7 @@ author: |-
   Jean Carlo Sanabria Martínez — C37241 \
   Universidad de Costa Rica, Escuela de Mátematica, Deoartamento de Ciencias Actuariales \
   Ciudad Universitaria Rodrigo Facio, San Pedro de Montes de Oca, San José, Costa Rica \
-  Profesor: Luis Alberto Juárez Potoy \
+  Profesor: Luis Alberto Juárez Potoy
   
 date: 2026-08-10
 date-format: long
@@ -15,18 +15,10 @@ lang: es
 format:  
   typst:
     papersize: a4
+    fontsize: 12pt
     margin:
       x: 1.8cm
       y: 1.6cm
-    fontsize: 12pt
-
-execute:
-  echo: false
-  warning: false
-  message: false
-editor: 
-  markdown: 
-    wrap: 72
 ---
 
 ```{r}
@@ -51,10 +43,7 @@ source("03_Revisión_y_depuración_data.R")
 
 ```
 
-
 # Introducción
-
-
 
 # Objetivo
 
@@ -95,8 +84,6 @@ $$\large \sigma = {sd}\left(\ln \left(\frac{S_i}{S_{i-1}} \right)\right)\sqrt{25
   [Diversificada], [Acciones poca correlación]
 )
 ```
-
-
 # Resultados
 
 ```{r}
@@ -104,9 +91,8 @@ source("06_Modelo_Lognormal_y_Monte_Carlo.R")
 source("07_Construcción_carteras.R")
 ```
 
-
 # Bibliografía
- 
+
 # Anexos
 
 ```{r}
@@ -157,40 +143,40 @@ tabla.empresas <- tibble(
 sectores <- tabla.empresas %>% count(`Sector GICS`) # 9 de 11 sectores.
 ```
 
-
 ```{r}
-
-alta <-  parametros %>%
-  filter(Ticker %in% cartera.1$Ticker)
-
-mean(alta$Retorno.esperado.anual)
-mean(alta$Volatilidad.anual)
-
-
 
 concentrada <- parametros %>%
   filter(Ticker %in% cartera.4$Ticker)
 
-concentrada %>% summarise(
-  Cartera = "Cartera concentrada",
-  "Volatilidad Media" = mean(Volatilidad.anual, na.rm = T),
-  "Retorno Medio" = mean(Retorno.esperado.anual, na.rm = T)
-)
-
-mean(concentrada$Retorno.esperado.anual)
-mean(concentrada$Volatilidad.anual)
-
 div <- parametros %>%
   filter(Ticker %in% cartera.5$Ticker)
-mean(div$Retorno.esperado.anual)
-mean(div$Volatilidad.anual)
 
 
+comparacion.carteras.4.5 <- tibble(
+  Cartera = c("Concentrada", "Diversificada"),
 
+  `Retorno esperado (%)` = round(
+    100*c(
+      mean(concentrada$Retorno.esperado.anual),
+      mean(div$Retorno.esperado.anual)
+    ),
+    2
+  ),
+
+  `Volatilidad (%)` = round(
+    100*c(
+      mean(concentrada$Volatilidad.anual),
+      mean(div$Volatilidad.anual)
+    ),
+    2
+  )
+) %>% 
+  mutate(
+    `μ/σ` = round(`Retorno esperado (%)` / `Volatilidad (%)`, 2)
+  )
+
+kable(comparacion.carteras.4.5, align = c("l", "c", "c","c"))
 
 
 ```
-
-
-
 

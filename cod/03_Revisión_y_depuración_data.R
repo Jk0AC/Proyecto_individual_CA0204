@@ -99,7 +99,7 @@ muestra.volt <- seleccion %>%
 
 #Nombres empresas de la muestra:
 
-muestra$Ticker
+empresas.muestra <- muestra$Ticker
 
 #Verifiación muestra completa:
 
@@ -110,4 +110,6 @@ muestra %>%
 
 stock.price.dep <- stock.price.dep %>% 
   filter(Ticker %in% muestra$Ticker)
+
+
 
