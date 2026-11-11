@@ -121,7 +121,7 @@ grafico.serie.historica.1 <- ggplot(
 ) +
   
   geom_line(
-    linewidth = 0.8
+    linewidth = 0.4
   ) +
   
   geom_vline(
@@ -168,8 +168,8 @@ grafico.serie.historica.1 <- ggplot(
   ) +
   
   labs(
-    title = "Evolución histórica de precios ajustados acciones",
-    subtitle = "(2016 - 2026)",
+    title = "",
+    subtitle = "",
     x = "Año",
     y = "Precio acción USD"
   ) +
@@ -230,7 +230,7 @@ grafico.serie.historica.2 <- ggplot(
 ) +
   
   geom_line(
-    linewidth = 0.8
+    linewidth = 0.4
   ) +
   
   geom_vline(
@@ -277,8 +277,8 @@ grafico.serie.historica.2 <- ggplot(
   ) +
   
   labs(
-    title = "Evolución histórica de precios ajustados acciones",
-    subtitle = "(2016 - 2026)",
+    title = "",
+    subtitle = "",
     x = "Año",
     y = "Precio acción USD"
   ) +
@@ -473,4 +473,115 @@ guides(
     ),
     
     panel.grid.minor = element_blank()
+  )
+
+
+## Grafico trayectorias Montecarlo: ----
+
+trayectorias.aapl <- proyecciones.final %>%
+  filter(Ticker == "AAPL") %>%
+  slice_sample(n = 2000) %>%
+  mutate(
+    Mes.0 = So,
+    Final = Mes.12
+  )  %>%
+  pivot_longer(
+    cols = starts_with("Mes."),
+    names_to = "Mes",
+    values_to = "Precio"
+  ) %>%
+  mutate(
+    Mes = as.numeric(
+      gsub("Mes\\.", "", Mes)
+    )
+  ) %>% 
+  arrange(
+    Trayectoria,
+    Mes
+  )
+
+
+
+grafico.trayectorias <- ggplot(
+  trayectorias.aapl,
+  aes(
+    x = Mes,
+    y = Precio,
+    group = Trayectoria,
+    color = Final
+  )
+) +
+  
+  geom_line(
+    linewidth = 0.8
+  ) +
+  
+  scale_color_gradientn(
+    colours = c(
+      "#001270",
+      "#4575B4",
+      "#00B1FF",
+      "#FFFFBF",
+      "#FDAE61",
+      "#FDAE61",
+      "#F46D43",
+      "#F46D43",
+      "#D73027",
+      "#A50026",
+      "#A50026"
+    )
+  ) +
+  
+  geom_hline(
+    yintercept = unique(trayectorias.aapl$So),
+    linewidth = 1.2,
+    color = "black"
+  ) +
+  
+  annotate(
+    "text",
+    x = -1,
+    y = 316.85,
+    label = "316.85",
+    hjust = 0,
+    vjust = -0.5,
+    fontface = "bold",
+    size = 4
+  ) +
+  
+  scale_x_continuous(
+    expand = expansion(mult = c(0, 0)),
+    breaks = 0:12,
+    labels = 0:12
+  ) +
+  labs(
+    title = "Trayectorias simuladas de AAPL mediante GBM",
+    subtitle = "1.000 trayectorias coloreadas según el precio final",
+    x = "Mes",
+    y = "Precio proyectado (USD)",
+    color = "Precio final"
+  ) +
+  
+  theme_minimal(base_size = 12) +
+  
+  theme(
+    plot.margin = margin(
+      t = 5,
+      r = 0,
+      b = 10,
+      l = 5
+    ),
+    plot.title = element_text(
+      face = "bold",
+      hjust = 0.5
+    ),
+    
+    plot.subtitle = element_text(
+      hjust = 0.5
+    ),
+    
+    panel.border = element_rect(
+      colour = "black",
+      fill = NA
+    )
   )
