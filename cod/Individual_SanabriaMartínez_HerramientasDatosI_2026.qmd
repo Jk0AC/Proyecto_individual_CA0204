@@ -141,7 +141,6 @@ Para el análisis se construyeron cinco carteras, con una inversión inical de $
 
 $$C_{t,j} =\sum_{i=1}^6 \frac{W_i}{S_{0,i}}S_{t,i} \quad,\qquad con\quad Wi = I*w = 17 000$${#eq-cartera}
 
-*Carteracterísticas de selección carteras:*
 ```{=typst}
 #align(left, text(size: 11pt)[ #table( columns:  (3cm, 5cm), stroke: 0.5pt + gray, inset: 4pt,
 
@@ -177,6 +176,46 @@ source("07_Construcción_carteras.R")
 source("08_Gráficos.R")
 ```
 
+## Análisis Exploratorio de Datos
+
+```{r}
+#| label: fig-gbm
+#| fig-cap: "Comparación de 1000 trayectorias a un año "
+#| fig-width: 12
+#| fig-height: 6
+
+grafico.trayectorias.1 +
+  labs(title = "Tesla (volatilidad alta)") | grafico.trayectorias.2 +
+                            labs(title = "STERIS  (volatilidad baja)")
+```
+
+En la @fig-gbm se tomaron dos empresas representativas de la muestra, tomado sus extremos, bajo los criterios de selección, por lo que ambas se encuentran en el espectro volátil opuesto. En los gráficos podemos observar cómo las trayectorias simuladas muestran una tendencia creciente respecto al precio inicial del activo. Este comportamiento se explica por la naturaleza del Movimiento Browniano Geométrico y por los rendimientos esperados positivos. Asimismo, la distribución lognormal implícita en el modelo genera una asimetría positiva, caracterizada por una cola derecha más extensa en acciones muy volatiles, como en la figura izquierda (aparición de precios extremos S(1), de hasta 9 veces el valor inicial), con proyecciones muy por encima de donde partimos, en cambio en la derecha, observamos escenarios mucho más conservadores y una distribución más simétrica. Este resultado nos muestra los comportamientos del GBM en la proyección del precio de acciones, que aunque no pueden tomar valores negativos, si pueden experimentarse pérdidas respecto a la inversión inicial cuando el precio final resulta inferior al precio de compra.
+
+Es preciso resaltar cómo la volatilidad se refleja en la dispersión de los resultados futuros. Recordemos que en el contexto del Movimiento Browniano Geométrico, un aumento de la volatilidad incrementa la incertidumbre sobre el precio futuro del activo y amplía tanto los escenarios favorables como desfavorables. Sin, embargo para los resultados de cartera, es importante tener en cuenta que la probabilidad de pérdida no depende exclusivamente de la volatilidad, sino también del rendimiento esperado del activo. En consecuencia, activos o carteras con alta volatilidad pueden presentar probabilidades de pérdida relativamente bajas si su rendimiento esperado es suficientemente elevado para compensar dicho riesgo.
+
+Conviene señalar que los párametros para cada empresa se obtuvieron usando la data histórica reciente, asumiento ímplicitamente que el pasado es representativo del desempeño futuro, debido a que el horizonte de proyección considerado es de un año, no es poco razonable asumir que, ante la ausencia de un eveneto extraordinario, las condiciones observadas en los períodos más recientes constituyen una buena aproximación de la dinámica esperada a un año. Para obtener una percepción más amplia del comportamiento y evolución histórica reciente de los precios de la muestra veáse la @fig-ser1 y @fig-ser2 en el apartado de Anexos.
+
+
+## Resultados metodología
+
+```{r}
+#| label: fig-perc
+#| fig-dist: "Distribución simulada de resultados de carteras por perceptiles y valor esperado"
+#| fig-width: 7
+#| fig-height: 3.5
+
+grafico.perceptiles
+```
+
+Los resultados de las simulaciones muestran una relación consistente entre rentabilidad esperada y riesgo. La cartera **Agresiva** presenta el mayor valor esperado (132 146 USD), además presenta una asimetría, debido a que el promedio muestra un sesgo a la derecha respecto a la mediana, por valores muy altos; valores mayores a 177 852 USD en el 5% de los escenarios más favorables. Además muestra la mayor desviación de entre trayectorias con una desviación estándar reportada de (25 325 USD), cómo resultado poseee la brecha más amplia entre sus valores extremos, relacionada directamente a su exposión a escenarios desfavorables, donde el VaR (5%) está por debajo a la inversión inicial, hay pérdidas. Le sigue la cartera **Diversificada** que presenta una posición muy similar. Es importante resaltar que esta cartera es la que presenta mayor probabilidad de pérdida con un (11.6%). 
+
+En contraste con lo anterior las carteras **Concentrada, Moderada, Conservadora** presentan esecnarios más equilibrados debido al bajo perfil vólatil de sus acciones, resaltando la **Conservadiora** que presenta la distribución más símetrica, reflejada en su desviación estándar, que es la menor con (10 247 USD), adémas es la que tiene menor sesgo pues promedio (118 772 USD) y mediana (118 287 USD) son prácticamente idénticos, esa proporcionalidad se refleja en una exposición al riesgo más moderada con probabilidad de pérdida (> 0.5%).
+
+Un resultado particularmente interesante es el comportamiento de la cartera *Diversificada* frente a su contraparte *Concentrada*. Los resultados reflejan que la *Diversificada* además de tener la mayor probabilidad de pérdida, también presentó el peor VaR de la muestra (95,629 USD). Este resultado parece ser contradictorio desde la lógica tradicional del mundo de las inversiones, sin embargo, estos resultados deben interpretarse considerando una limitación importante del estudio. Aunque la construcción de las carteras concentrada y diversificada se fundamentó en el análisis de correlaciones históricas, las simulaciones fueron realizadas mediante GBM independientes, suponiendo correlación nula entre los activos. Esta simplificación impide capturar completamente los beneficios de diversificación derivados de correlaciones imperfectas y, al mismo tiempo, tiende a subestimar el riesgo de las carteras formadas por activos altamente correlacionados.
+
+
+Por otro lado, desde la lógica de modelo, la explicación se encuentra en la composición específica de los activos seleccionados, como se muestra en la tabla de abajo, donde se observa cómo una consecuencia de la relación riesgo-rentabilidad, donde la cartera **Concentrada** posee un ratio (0.84), que resulta más favorable que el de la cartera diversificada (0.58).
+
 ```{r}
 
 concentrada <- parametros %>%
@@ -211,27 +250,18 @@ comparacion.carteras.4.5 <- tibble(
 
 kable(comparacion.carteras.4.5, align = c("l", "c", "c","c"))
 
-
 ```
 
-```{r}
-#| fig-cap: "Comparación de 1000 trayectorias simuladas"
-#| fig-width: 12
-#| fig-height: 6
 
-grafico.trayectorias.1 +
-  labs(title = "Tesla (volatilidad alta)") | grafico.trayectorias.2 +
-                            labs(title = "STERIS  (volatilidad baja)")
-```
 
-```{r}
-#| label: fig-perc
-#| fig-cap: "Distribución simulada de resultados de carteras por perceptiles y valor esperado"
-#| fig-width: 9
-#| fig-height: 5.5
 
-grafico.perceptiles
-```
+
+
+
+
+
+Las estimaciones obtenidas mediante simulación de Montecarlo presentan una elevada precisión estadística. Los errores estándar del valor esperado oscilaron entre 102 y 253 USD, lo que representa menos del 0,2 % del valor esperado de las carteras. Asimismo, los errores estándar de la probabilidad de pérdida se situaron entre 0,002 y 0,003, lo que indica una gran estabilidad en las estimaciones derivadas de las 10 000 simulaciones realizadas.
+
 
 ## Alcance y limites del modelo
 
@@ -252,6 +282,7 @@ Glasserman, P. (2004). Monte Carlo methods in financial engineering. Springer.
 
 # Anexos
 
+## Sobre empresas
 
 ```{=typst}
 #figure(align(center,
@@ -303,6 +334,8 @@ Glasserman, P. (2004). Monte Carlo methods in financial engineering. Springer.
 ```
  
  
+## Relaciones entre empresas
+ 
 ```{r}
 #| label: fig-corr
 #| fig-width: 4
@@ -312,6 +345,55 @@ Glasserman, P. (2004). Monte Carlo methods in financial engineering. Springer.
 #Grafico de correlación:
 grafico.corr.empresas()
 ```
+```{=typst}
+#figure(
+  caption: [Mayores correlaciones observadas entre empresas de la muestra],
+
+  align(center,
+    table(
+      columns: (2.5cm, 2.5cm, 3cm, 6cm),
+      stroke: 0.4pt + gray,
+      inset: 4pt,
+
+      table.cell(fill: rgb("#1F4E79"))[
+        #text(fill: white)[*Empresa 1*]
+      ],
+
+      table.cell(fill: rgb("#1F4E79"))[
+        #text(fill: white)[*Empresa 2*]
+      ],
+
+      table.cell(fill: rgb("#1F4E79"))[
+        #text(fill: white)[*Correlación*]
+      ],
+
+      table.cell(fill: rgb("#1F4E79"))[
+        #text(fill: white)[*Sector GICS*]
+      ],
+
+      [DUK], [SO], [0.8412],
+      table.cell(fill: rgb("#DCE6F1"))[*Servicios de Utilidad Pública*],
+
+      [AXP], [JPM], [0.7316],
+      table.cell(fill: rgb("#DCE6F1"))[*Financiero*],
+
+      [PH], [URI], [0.6883],
+      table.cell(fill: rgb("#DCE6F1"))[*Industriales*],
+
+      [SCHW], [JPM], [0.6593],
+      table.cell(fill: rgb("#DCE6F1"))[*Financiero*],
+
+      [LIN], [PH], [0.5736],
+      table.cell(fill: rgb("#DCE6F1"))[*Materiales/Industriales*],
+
+      [COO], [STE], [0.5483],
+      table.cell(fill: rgb("#DCE6F1"))[*Cuidado de la Salud*]
+    )
+  )
+) <tbl-correlaciones>
+```
+
+## Series históricas
 
 ```{r}
 #| label: fig-ser1
