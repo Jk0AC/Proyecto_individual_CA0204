@@ -300,6 +300,23 @@ Glasserman, P. (2004). Monte Carlo methods in financial engineering. Springer.
 #Grafico de correlación:
 grafico.corr.empresas()
 ```
- 
+
+```{r}
+#| label: fig-ser1
+#| fig-cap: "Evolución histórica de precios ajustados acciones (2016 - 2026)"
+#| fig-width: 10
+#| fig-height: 6
+
+grafico.serie.historica.1
+```
+
+```{r}
+#| label: fig-ser2
+#| fig-cap: "Evolución histórica de precios ajustados acciones (2016 - 2026)"
+#| fig-width: 10
+#| fig-height: 6
+
+grafico.serie.historica.2
+```
  
 
