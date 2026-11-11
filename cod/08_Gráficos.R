@@ -554,7 +554,7 @@ grafico.trayectorias.1 <- ggplot(
   
   annotate(
     "label",
-    x = 2.5,
+    x = 3,
     y = 8.5,
     
     label = paste0(
@@ -673,7 +673,7 @@ grafico.trayectorias.2 <- ggplot(
   )  +
   annotate(
     "label",
-    x = 2.5,
+    x = 3,
     y = 2.25,
     
     label = paste0(
@@ -696,8 +696,8 @@ grafico.trayectorias.2 <- ggplot(
     title = "",
     subtitle = "",
     x = "Mes",
-    y = "S(t) / S(0)",
-    color = "Precio final"
+    y = "Precio relativo",
+    color = "S(t)"
   ) +
   scale_y_continuous(
     breaks = seq(
