@@ -215,6 +215,16 @@ kable(comparacion.carteras.4.5, align = c("l", "c", "c","c"))
 ```
 
 ```{r}
+#| fig-cap: "Comparación de 1000 trayectorias simuladas"
+#| fig-width: 12
+#| fig-height: 6
+
+grafico.trayectorias.1 +
+  labs(title = "Tesla (volatilidad alta)") | grafico.trayectorias.2 +
+                            labs(title = "STERIS  (volatilidad baja)")
+```
+
+```{r}
 #| label: fig-perc
 #| fig-cap: "Distribución simulada de resultados de carteras por perceptiles y valor esperado"
 #| fig-width: 9
@@ -295,6 +305,8 @@ Glasserman, P. (2004). Monte Carlo methods in financial engineering. Springer.
  
 ```{r}
 #| label: fig-corr
+#| fig-width: 4
+#| fig-height: 4
 #| fig-cap: "Correlación de los retornos logarítmicos entre empresas de la muestra"
 
 #Grafico de correlación:
@@ -304,8 +316,8 @@ grafico.corr.empresas()
 ```{r}
 #| label: fig-ser1
 #| fig-cap: "Evolución histórica de precios ajustados acciones (2016 - 2026)"
-#| fig-width: 10
-#| fig-height: 6
+#| fig-width: 8
+#| fig-height: 5
 
 grafico.serie.historica.1
 ```
@@ -313,10 +325,10 @@ grafico.serie.historica.1
 ```{r}
 #| label: fig-ser2
 #| fig-cap: "Evolución histórica de precios ajustados acciones (2016 - 2026)"
-#| fig-width: 10
-#| fig-height: 6
+#| fig-width: 8
+#| fig-height: 5
 
 grafico.serie.historica.2
 ```
- 
+
 
