@@ -476,10 +476,13 @@ guides(
   )
 
 
-## Grafico trayectorias Montecarlo: ----
+## Grafico trayectorias Montecarlo ----
 
-trayectorias.aapl <- proyecciones.final %>%
-  filter(Ticker == "AAPL") %>%
+
+### Trayectorias TSLA: ----
+
+trayectorias.tsla <- proyecciones.final %>%
+  filter(Ticker == "TSLA") %>%
   slice_sample(n = 2000) %>%
   mutate(
     Mes.0 = So,
@@ -502,8 +505,8 @@ trayectorias.aapl <- proyecciones.final %>%
 
 
 
-grafico.trayectorias <- ggplot(
-  trayectorias.aapl,
+grafico.trayectorias.1 <- ggplot(
+  trayectorias.tsla,
   aes(
     x = Mes,
     y = Precio,
@@ -513,7 +516,7 @@ grafico.trayectorias <- ggplot(
 ) +
   
   geom_line(
-    linewidth = 0.8
+    linewidth = 0.4
   ) +
   
   scale_color_gradientn(
@@ -533,7 +536,7 @@ grafico.trayectorias <- ggplot(
   ) +
   
   geom_hline(
-    yintercept = unique(trayectorias.aapl$So),
+    yintercept = unique(trayectorias.tsla$So),
     linewidth = 1.2,
     color = "black"
   ) +
@@ -541,8 +544,8 @@ grafico.trayectorias <- ggplot(
   annotate(
     "text",
     x = -1,
-    y = 316.85,
-    label = "316.85",
+    y = 367.95,
+    label = "367.95",
     hjust = 0,
     vjust = -0.5,
     fontface = "bold",
@@ -555,10 +558,124 @@ grafico.trayectorias <- ggplot(
     labels = 0:12
   ) +
   labs(
-    title = "Trayectorias simuladas de AAPL mediante GBM",
-    subtitle = "1.000 trayectorias coloreadas según el precio final",
+    title = "",
+    subtitle = "",
     x = "Mes",
-    y = "Precio proyectado (USD)",
+    y = "S(t)",
+    color = "Precio final"
+  ) +
+  
+  theme_minimal(base_size = 12) +
+  
+  theme(
+    plot.margin = margin(
+      t = 5,
+      r = 0,
+      b = 10,
+      l = 5
+    ),
+    plot.title = element_text(
+      face = "bold",
+      hjust = 0.5
+    ),
+    
+    plot.subtitle = element_text(
+      hjust = 0.5
+    ),
+    
+    panel.border = element_rect(
+      colour = "black",
+      fill = NA
+    )
+  )
+
+
+
+
+
+
+### Trayectorias STE: ----
+trayectorias.ste <- proyecciones.final %>%
+  filter(Ticker == "STE") %>%
+  slice_sample(n = 2000) %>%
+  mutate(
+    Mes.0 = So,
+    Final = Mes.12
+  )  %>%
+  pivot_longer(
+    cols = starts_with("Mes."),
+    names_to = "Mes",
+    values_to = "Precio"
+  ) %>%
+  mutate(
+    Mes = as.numeric(
+      gsub("Mes\\.", "", Mes)
+    )
+  ) %>% 
+  arrange(
+    Trayectoria,
+    Mes
+  )
+
+
+
+grafico.trayectorias.2 <- ggplot(
+  trayectorias.ste,
+  aes(
+    x = Mes,
+    y = Precio,
+    group = Trayectoria,
+    color = Final
+  )
+) +
+  
+  geom_line(
+    linewidth = 0.4
+  ) +
+  
+  scale_color_gradientn(
+    colours = c(
+      "#001270",
+      "#4575B4",
+      "#00B1FF",
+      "#FFFFBF",
+      "#FDAE61",
+      "#FDAE61",
+      "#F46D43",
+      "#F46D43",
+      "#D73027",
+      "#A50026",
+      "#A50026"
+    )
+  ) +
+  
+  geom_hline(
+    yintercept = unique(trayectorias.ste$So),
+    linewidth = 1.2,
+    color = "black"
+  ) +
+  
+  annotate(
+    "text",
+    x = -1,
+    y = 232.64,
+    label = "232.64",
+    hjust = 0,
+    vjust = -0.5,
+    fontface = "bold",
+    size = 4
+  ) +
+  
+  scale_x_continuous(
+    expand = expansion(mult = c(0, 0)),
+    breaks = 0:12,
+    labels = 0:12
+  ) +
+  labs(
+    title = "",
+    subtitle = "",
+    x = "Mes",
+    y = "S(t)",
     color = "Precio final"
   ) +
   
