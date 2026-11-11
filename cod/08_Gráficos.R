@@ -494,6 +494,7 @@ trayectorias.tsla <- proyecciones.final %>%
     values_to = "Precio"
   ) %>%
   mutate(
+    Precio.normalizado = Precio / So,
     Mes = as.numeric(
       gsub("Mes\\.", "", Mes)
     )
@@ -509,7 +510,7 @@ grafico.trayectorias.1 <- ggplot(
   trayectorias.tsla,
   aes(
     x = Mes,
-    y = Precio,
+    y = Precio.normalizado,
     group = Trayectoria,
     color = Final
   )
@@ -525,32 +526,48 @@ grafico.trayectorias.1 <- ggplot(
       "#4575B4",
       "#00B1FF",
       "#FFFFBF",
+      "#FFFFBF",
       "#FDAE61",
       "#FDAE61",
       "#F46D43",
       "#F46D43",
       "#D73027",
+      "#D73027",
+      "#A50026", 
       "#A50026",
       "#A50026"
     )
   ) +
   
   geom_hline(
-    yintercept = unique(trayectorias.tsla$So),
+    yintercept = 1.0,
     linewidth = 1.2,
     color = "black"
-  ) +
+  )  +
+  scale_y_continuous(
+    breaks = seq(
+      0,
+      10,
+      by = 1
+    )
+  )+
   
   annotate(
-    "text",
-    x = -1,
-    y = 367.95,
-    label = "367.95",
-    hjust = 0,
-    vjust = -0.5,
-    fontface = "bold",
-    size = 4
-  ) +
+    "label",
+    x = 2.5,
+    y = 8.5,
+    
+    label = paste0(
+    "S(0) =", " $", 367.95,
+    "\nEscala y := S(t) / S(0)",
+    "\nμ = ", 0.47,
+    ", σ = ", 0.58
+  ),
+
+  size = 5,
+  fill = "white"
+  )  +
+  
   
   scale_x_continuous(
     expand = expansion(mult = c(0, 0)),
@@ -561,9 +578,9 @@ grafico.trayectorias.1 <- ggplot(
     title = "",
     subtitle = "",
     x = "Mes",
-    y = "S(t)",
-    color = "Precio final"
-  ) +
+    y = "Precio Relativo",
+    color = "S(t)"
+  )+
   
   theme_minimal(base_size = 12) +
   
@@ -608,6 +625,7 @@ trayectorias.ste <- proyecciones.final %>%
     values_to = "Precio"
   ) %>%
   mutate(
+    Precio.normalizado = Precio / So,
     Mes = as.numeric(
       gsub("Mes\\.", "", Mes)
     )
@@ -623,7 +641,7 @@ grafico.trayectorias.2 <- ggplot(
   trayectorias.ste,
   aes(
     x = Mes,
-    y = Precio,
+    y = Precio.normalizado,
     group = Trayectoria,
     color = Final
   )
@@ -648,35 +666,45 @@ grafico.trayectorias.2 <- ggplot(
       "#A50026"
     )
   ) +
-  
   geom_hline(
-    yintercept = unique(trayectorias.ste$So),
+    yintercept = 1.0,
     linewidth = 1.2,
     color = "black"
-  ) +
-  
+  )  +
   annotate(
-    "text",
-    x = -1,
-    y = 232.64,
-    label = "232.64",
-    hjust = 0,
-    vjust = -0.5,
-    fontface = "bold",
-    size = 4
-  ) +
-  
+    "label",
+    x = 2.5,
+    y = 2.25,
+    
+    label = paste0(
+      "S(0) =", " $", 273.84,
+      "\nEscala y := S(t) / S(0)",
+      "\nμ = ", 0.145,
+      ", σ = ",  0.233
+    ),
+    
+    size = 5,
+    fill = "white"
+  )  +
   scale_x_continuous(
     expand = expansion(mult = c(0, 0)),
     breaks = 0:12,
     labels = 0:12
   ) +
+  
   labs(
     title = "",
     subtitle = "",
     x = "Mes",
-    y = "S(t)",
+    y = "S(t) / S(0)",
     color = "Precio final"
+  ) +
+  scale_y_continuous(
+    breaks = seq(
+      0,
+      4,
+      by = 0.5
+    )
   ) +
   
   theme_minimal(base_size = 12) +
