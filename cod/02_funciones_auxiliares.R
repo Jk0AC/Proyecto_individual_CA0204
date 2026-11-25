@@ -1,7 +1,5 @@
 #Funciones: ----
 
-###PENDIENTES: CONTROL ERRORES ENTRADA: ----
-
 ##(i) ----
 
 #Funcion recibe vector precios, devuelve vector retornos logarítmicos (1er elemento NA):

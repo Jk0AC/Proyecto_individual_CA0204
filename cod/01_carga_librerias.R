@@ -1,31 +1,17 @@
 
 #Librerias:----
 ##Básicas:----
-library(readr)
+library(readr) #Carga de data muy grande formato
 library(dplyr)
 library(lubridate)
 library(ggplot2)
 library(tidyr)
-library(knitr)
-library(kableExtra)
 
 
 ##Extra: ----
-library(corrplot)
-library(ggrepel)
-library(patchwork)
+library(corrplot) #Crear gráfico calor correlaciones empresas.
+library(ggrepel) #Evitar etiquetas en gráficos de superpongan.
+library(patchwork) #Combinar varios gráficos de ggplot2 en una sola figura. Usada en fig-gbm en el reporte.
 
-
-
-
-# citation("readr")
-# citation("dplyr")
-# citation("lubridate")
-# citation("ggplot2")
-# citation("tidyr")
-# citation("knitr")
-# citation("kableExtra")
-# citation("corrplot")
-# citation("ggrepel")
 
 
