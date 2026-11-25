@@ -1,3 +1,7 @@
+#Contiene funciones propias creadas con cálculos y parámetros del modelo
+#y automatizar resultados estadísticos de las carteras.
+
+
 #Funciones: ----
 
 ##(i) ----
@@ -53,7 +57,7 @@ proyectar.accion <- function(s0, mu, vol, dt, z){
 ##(iv)----
 
 #Función que recibe un vector (vector con valores de proyecciones de la cartera)
-#y devuelve un tibble con un resumen estadístico: esperanza, VaR, 
+#y devuelve un tibble con un resumen estadístico: esperanza, perceptil 5, 
 #probabilidad de pérdida y errores estándar variables simuladas: valor esperado, 
 #probabilidad de pérdida
 
@@ -62,8 +66,8 @@ resumen.cartera <- function(V1, Vo = 102000){
   # Valor esperado
   valor.esperado <- mean(V1)
   
-  # VaR empírico (percentil 5%)
-  VaR <- quantile(V1, probs = 0.05)
+  # Percentil 5%
+  P5 <- quantile(V1, probs = 0.05)
   
   # Mediana (percentil 50%)
   mediana <- quantile(V1, probs = 0.50)
@@ -85,7 +89,7 @@ resumen.cartera <- function(V1, Vo = 102000){
   
   tibble::tibble(
     `Valor esperado` = valor.esperado,
-    `VaR (5%)` = as.numeric(VaR),
+    `P5 (5%)` = as.numeric(P5),
     `Mediana (50%)` = as.numeric(mediana),
     `P95 (95%)` = as.numeric(P95),
     `Probabilidad pérdida` = prob.perdida,

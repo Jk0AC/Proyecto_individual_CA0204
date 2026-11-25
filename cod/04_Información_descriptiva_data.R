@@ -1,4 +1,5 @@
-
+#Contiene información y revisión de la data. Contenido de columnas,
+#tipos de datos y resumenes.
 
 
 #Información descriptiva data y tablas resumen de contenidos: ----

@@ -1,3 +1,6 @@
+#Contiene las librerias que usa el trabajo se 
+#lee desde el Reporte con source()
+
 
 #Librerias:----
 ##Básicas:----

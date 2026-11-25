@@ -1,3 +1,12 @@
+#Contiene la limpieza y filtración de datos según criterios descritos en la 
+#metodología del informe.
+
+
+
+#Carga data:
+
+stock.price.raw <- read_csv("../data/master_stock_data.csv") 
+
 
 #Revisión preliminar data: ----
 

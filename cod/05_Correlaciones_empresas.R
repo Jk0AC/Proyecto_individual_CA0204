@@ -1,3 +1,8 @@
+#Contiene la extracción y la creación de la matriz de 
+#correlaciones entre empresas. Se usa cómo criterio selección de las carteras 
+#Concentrada y Diversificada y cómo base para la creación del gráfico 
+#de correlaciones en anexos
+
 
 #Relaciones entre empresas: ----
 

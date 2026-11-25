@@ -1,4 +1,6 @@
-
+#Contiene los parámetros de la inversión, creación de las carteras con las 
+#empresas definidas con el criterios descritos en la metodología y 
+#resultados de las proyecciones
 
 #Inversión inicial ----
 

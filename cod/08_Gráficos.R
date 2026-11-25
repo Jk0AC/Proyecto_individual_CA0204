@@ -1,4 +1,5 @@
-
+#Contiene los gráficos creados para la sección de Resultados y Anexos 
+#se carga con source() desde el reporte
 
 #Graficos: ----
 
@@ -334,7 +335,7 @@ grafico.corr.empresas <- function(){
 grafico.perceptiles <- ggplot(
   resumen.carteras %>%
     mutate(
-      Distancia = `P95 (95%)` - `VaR (5%)`
+      Distancia = `P95 (95%)` - `P5 (5%)`
     ) %>%
     arrange(desc(Distancia)),
   aes(
@@ -344,7 +345,7 @@ grafico.perceptiles <- ggplot(
   
   geom_segment(
     aes(
-      x = `VaR (5%)`,
+      x = `P5 (5%)`,
       xend = `P95 (95%)`,
       yend = Cartera
     ),
@@ -354,8 +355,8 @@ grafico.perceptiles <- ggplot(
   
   geom_point(
     aes(
-      x = `VaR (5%)`,
-      color = "VaR (5%)"
+      x = `P5 (5%)`,
+      color = "P5 (5%)"
     ),
     size = 4
   ) +
@@ -384,11 +385,11 @@ grafico.perceptiles <- ggplot(
     size = 4
   ) +
   
-  # Etiquetas VaR
+  # Etiquetas P5
   geom_text(
     aes(
-      x = `VaR (5%)`,
-      label = scales::comma(round(`VaR (5%)`,0))
+      x = `P5 (5%)`,
+      label = scales::comma(round(`P5 (5%)`,0))
     ),
     hjust = 1.15,
     size = 4,
@@ -409,7 +410,7 @@ grafico.perceptiles <- ggplot(
   scale_color_manual(
     name = NULL,
     values = c(
-      "VaR (5%)" = "#B22222",
+      "P5 (5%)" = "#B22222",
       "Mediana (50%)" = "#E69F00",
       "Valor esperado" = "#1F4E79",
       "P95 (95%)" = "#2E8B57"
