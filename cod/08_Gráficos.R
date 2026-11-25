@@ -730,3 +730,9 @@ grafico.trayectorias.2 <- ggplot(
       fill = NA
     )
   )
+
+
+
+
+
+

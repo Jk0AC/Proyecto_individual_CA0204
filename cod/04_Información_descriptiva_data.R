@@ -39,11 +39,6 @@ trng.days <- stock.price.dep %>%
 trng.days$Dias[1:10] %>% mean()  # 251.4
 
 
-# #Tabla resumen rango posición de cada empresa:
-# stock.price.dep %>% summarise(inicio = min(t),
-#                      final = max(t),
-#                      .by = Ticker)
-
 
 #Tabla resumen num. Fechas con dividendos por empresa:
 

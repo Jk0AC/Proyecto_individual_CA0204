@@ -1,5 +1,9 @@
 ---
-title: "Análisis de Carteras del S&P 500 mediante Simulación Monte Carlo y Movimiento Browniano Geométrico"
+title: |
+       Análisis de Carteras del S&P 500 mediante \
+       Simulación Monte Carlo y Movimiento \         
+       Browniano Geométrico
+       
 subtitle: "Herramientas de Ciencias de Datos I"
 
 title-block-style: default
@@ -37,7 +41,9 @@ header-includes:
      )
 
     #move(dy: -0.40cm)[
-    #text(fill: rgb("#033e66"))[
+    #text(fill: rgb("#033e66"),
+    size: 8pt
+    )[
       #grid(
         columns: (1fr, auto),
         [Universidad de Costa Rica #h(1em)-#h(1em) Jean Carlo Sanabria Martínez],
@@ -98,11 +104,9 @@ source("03_Revisión_y_depuración_data.R")
 
 # Introducción
 
-La modelización estocástica de los precios de los activos financieros constituye una herramienta fundamental para el análisis de inversiones, la gestión de riesgos y la valoración de instrumentos financieros. Entre los modelos más utilizados destaca el **Movimiento Browniano Geométrico (MBG)**, un proceso estocástico de tiempo continuo que describe la evolución de los precios mediante una combinación de crecimiento esperado y volatilidad aleatoria. Su desarrollo se fundamenta en los trabajos pioneros sobre movimiento browniano aplicados a las finanzas y adquirió especial relevancia tras su incorporación en el modelo de valoración de opciones de *Black y Scholes* (Black & Scholes, 1973; Hull, 2022).
+La modelización estocástica de los precios de los activos financieros constituye una herramienta fundamental para el análisis de inversiones, la gestión de riesgos y la valoración de instrumentos financieros. Entre los modelos más utilizados destaca el uso del **Movimiento Browniano Geométrico (MBG)**, un proceso estocástico de tiempo continuo, para describir la evolución de los precios. Su desarrollo se fundamenta en los trabajos pioneros sobre movimiento browniano aplicados a las finanzas y adquirió especial relevancia tras su incorporación en el modelo de valoración de opciones de *Black y Scholes* (Hull, 2022; Shreve, 2004). Sus aplicaciones abarcan la valoración de derivados, la gestión de portafolios y la proyección de escenarios futuros de inversión.
 
-El **MBG** se ha convertido en una de las herramientas más empleadas para la simulación *Monte Carlo* de precios de activos debido a su capacidad para garantizar precios positivos y representar de forma consistente la incertidumbre inherente a los mercados financieros (Shreve, 2004). Sus aplicaciones abarcan la valoración de derivados, la gestión de portafolios, el análisis de riesgo y la estimación de escenarios futuros de inversión.
-
-En este contexto, el presente estudio utiliza el GBM para proyectar la evolución de una muestra de acciones pertenecientes al índice S&P 500 y analizar el comportamiento de distintas estrategias de cartera. A través de simulaciones Monte Carlo se evalúan indicadores de desempeño y riesgo, tales como el **valor esperado, la probabilidad de pérdida** y el **Valor en Riesgo (VaR)**, con el propósito de examinar el impacto de la **volatilidad** y la diversificación sobre los resultados futuros de inversión.
+En este contexto, el presente estudio utiliza el *MBG* para proyectar la evolución de una muestra de acciones pertenecientes al índice S&P 500 y analizar el comportamiento de distintas estrategias de cartera. A través de simulaciones Monte Carlo se evalúan indicadores de desempeño y riesgo, con el propósito de examinar el impacto de la **volatilidad** y la diversificación sobre los resultados futuros de inversión.
 
 Para ello, se emplea el conjunto de datos [S&P 500 US Stock Market Data 2026](https://www.kaggle.com/datasets/parsalatifi/s-and-p-500-us-stock-market-data), obtenido de [Kaggle](https://www.kaggle.com/datasets) y construido a partir de información histórica diaria recopilada mediante la API de yfinance para 233 empresas del mercado estadounidense durante el período 1979-2026.
 
@@ -134,7 +138,7 @@ asimismo se decidió simplificar $\mu$ suponiendo:
 $E[r_t] = \bar r_t$
 
 ## Delimitación
-Con el propósito de mejorar la eficiencia computacional, el estudio se delimitó al período 2016-2026 y a una muestra reducida de empresas. Las acciones fueron clasificadas según su volatilidad histórica **[Ec. @eq-volRet]** y su volumen de transacción, agrupándolas en niveles alto, medio y bajo para cada criterio. La combinación de ambas variables permitió formar nueve grupos de clasificación. Finalmente, se seleccionaron las empresas ubicadas en los extremos de cada grupo, obteniéndose una muestra de 18 acciones [Véase @tbl-empresas], suficientemente diversa para representar distintos perfiles del mercado y lo bastante compacta para facilitar las simulaciones y el análisis posterior.
+Con el propósito de mejorar la eficiencia computacional, el estudio se delimitó al período 2016-2026 y a una muestra reducida de empresas. Las acciones fueron clasificadas según su volatilidad histórica y su volumen de transacción, agrupándolas en niveles alto, medio y bajo para cada criterio. La combinación de ambas permitió agruparlas en 9 categorías. Finalmente, se seleccionaron las empresas ubicadas en los extremos de cada grupo, obteniéndose una muestra de 18 acciones [Véase @tbl-empresas], suficientemente diversa para representar distintos perfiles del mercado y lo bastante compacta para facilitar las simulaciones y el análisis posterior.
 
 ## Construcción de carteras
 Para el análisis se construyeron cinco carteras, con una inversión inical de $I = 102 000$ de dólares en *t = 0 (fecha: 08-31-2026)*, cada una compuesta por seis empresas y $w = \frac{1}{6}$ el peso de la invérsión en cada una. Por lo que tendríamos 5 canteras con $S_{0,i}$ el último precio del cierre ajustado de cada empresa, con la siguiente composición:
@@ -155,18 +159,18 @@ $$C_{t,j} =\sum_{i=1}^6 \frac{W_i}{S_{0,i}}S_{t,i} \quad,\qquad con\quad Wi = I*
   [Concentrada], [Acciones mucha correlación],
   [Diversificada], [Acciones poca correlación]
 )
-] )
+] )<tbl-carteras>
 ```
 [ *Nota: Veáse Anexo @fig-corr para observar correlaciones entre empresas.*]{style="font-size: 0.8em;"}
 
 
 ## Simulación Monte Carlo e indicadores de desempeño
 
-La simulación de Montecarlo consiste en la generación reiterada de escenarios aleatorios equiprobables para aproximar la distribución futura de una variable de interés. En este estudio, cada trayectoria de precios se obtuvo mediante un **MBG**, empleando variables aleatorias independientes $Z \sim N(0,1)$ generadas para cada activo y periodo de simulación. A partir de 10 000 trayectorias, por empresa, se construyeron las distribuciones de los valores futuros, a un año desde la última fecha registrada, para las distintas carteras, lo que permitió evaluar la incertidumbre asociada a cada estrategia de inversión (Hull, 2022; Shreve, 2004).
+La simulación de Monte Carlo consiste en la generación reiterada de escenarios aleatorios equiprobables para aproximar la distribución futura de una variable de interés. En este estudio, cada trayectoria de precios se obtuvo mediante un **MBG**, empleando variables aleatorias independientes $Z \sim N(0,1)$ generando valores mediante la función rnorm() del software R (R Core Team, 2025) para cada activo y periodo de simulación. A partir de 10 000 trayectorias, por empresa, se construyeron las distribuciones de los valores futuros (Hull, 2022; Shreve, 2004).
 
-Para comparar el desempeño de las carteras, se utilizaron cinco indicadores: el valor esperado, como medida del rendimiento promedio; el **Valor en Riesgo (VaR) al 5 %**, derivado del *percentil 5* de la distribución simulada; la **probabilidad de pérdida**, definida como la proporción de simulaciones en las que el valor final es inferior a la inversión inicial; y los errores estándar del valor esperado y de la probabilidad de pérdida, los cuales sirven para cuantificar la precisión estadística de las estimaciones obtenidas mediante el método de Montecarlo (Glasserman, 2004).
+Para comparar el desempeño de las carteras, se utilizaron cinco indicadores: el valor esperado o promedio de carteras; el **Valor en Riesgo (VaR) al 5 %**, derivado del *percentil 5* de la distribución simulada; la **probabilidad de pérdida** o la proporción de simulaciones donde el valor final es inferior a la inversión inicial; y los errores estándar del valor esperado y de la probabilidad de pérdida, para evaluar la precisión estadística de las estimaciones (Glasserman, 2004).
 
-*Los shocks aleatorios fueron generados mediante la función rnorm() del software R (R Core Team, 2025).*
+
 
 # Resultados
 
@@ -175,6 +179,7 @@ source("06_Modelo_Lognormal_y_Monte_Carlo.R")
 source("07_Construcción_carteras.R")
 source("08_Gráficos.R")
 ```
+
 
 ## Análisis Exploratorio de Datos
 
@@ -189,32 +194,32 @@ grafico.trayectorias.1 +
                             labs(title = "STERIS  (volatilidad baja)")
 ```
 
-En la @fig-gbm se tomaron dos empresas representativas de la muestra, tomado sus extremos, bajo los criterios de selección, por lo que ambas se encuentran en el espectro volátil opuesto. En los gráficos podemos observar cómo las trayectorias simuladas muestran una tendencia creciente respecto al precio inicial del activo. Este comportamiento se explica por la naturaleza del Movimiento Browniano Geométrico y por los rendimientos esperados positivos. Asimismo, la distribución lognormal implícita en el modelo genera una asimetría positiva, caracterizada por una cola derecha más extensa en acciones muy volatiles, como en la figura izquierda (aparición de precios extremos S(1), de hasta 9 veces el valor inicial), con proyecciones muy por encima de donde partimos, en cambio en la derecha, observamos escenarios mucho más conservadores y una distribución más simétrica. Este resultado nos muestra los comportamientos del GBM en la proyección del precio de acciones, que aunque no pueden tomar valores negativos, si pueden experimentarse pérdidas respecto a la inversión inicial cuando el precio final resulta inferior al precio de compra.
+En la @fig-gbm se tomaron dos empresas representativas de la muestra, que se encuentran en el espectro volátil opuesto. Podemos observar cómo las trayectorias simuladas muestran una tendencia creciente respecto al precio inicial del activo. Este comportamiento se explica por la naturaleza del MBG y por los rendimientos esperados positivos. Asimismo, la distribución lognormal implícita en el modelo genera una asimetría positiva, caracterizada por una cola derecha más extensa en acciones muy volatiles, como en la figura izquierda, con proyecciones muy por encima de donde partimos, en cambio en la derecha, observamos escenarios mucho más conservadores y una distribución más simétrica.
 
-Es preciso resaltar cómo la volatilidad se refleja en la dispersión de los resultados futuros. Recordemos que en el contexto del Movimiento Browniano Geométrico, un aumento de la volatilidad incrementa la incertidumbre sobre el precio futuro del activo y amplía tanto los escenarios favorables como desfavorables. Sin, embargo para los resultados de cartera, es importante tener en cuenta que la probabilidad de pérdida no depende exclusivamente de la volatilidad, sino también del rendimiento esperado del activo. En consecuencia, activos o carteras con alta volatilidad pueden presentar probabilidades de pérdida relativamente bajas si su rendimiento esperado es suficientemente elevado para compensar dicho riesgo.
+Es preciso resaltar cómo la volatilidad se refleja en la dispersión de los resultados. En el contexto del MBG, un aumento de la volatilidad incrementa la incertidumbre sobre el precio futuro del activo y amplía tanto escenarios favorables como desfavorables. Sin, embargo para los resultados de cartera, es importante tener en cuenta que la probabilidad de pérdida no depende exclusivamente de la volatilidad, sino también del rendimiento esperado del activo. En consecuencia, activos o carteras con alta volatilidad pueden presentar probabilidades de pérdida relativamente bajas si su rendimiento esperado compensa dicho riesgo.
 
-Conviene señalar que los párametros para cada empresa se obtuvieron usando la data histórica reciente, asumiento ímplicitamente que el pasado es representativo del desempeño futuro, debido a que el horizonte de proyección considerado es de un año, no es poco razonable asumir que, ante la ausencia de un eveneto extraordinario, las condiciones observadas en los períodos más recientes constituyen una buena aproximación de la dinámica esperada a un año. Para obtener una percepción más amplia del comportamiento y evolución histórica reciente de los precios de la muestra veáse la @fig-ser1 y @fig-ser2 en el apartado de Anexos.
+Conviene señalar que los párametros para cada empresa se obtuvieron usando la data histórica reciente, asumiento ímplicitamente que el pasado es representativo del desempeño futuro, debido a que el horizonte de proyección considerado es de un año, no es poco razonable asumir que las condiciones de los períodos más recientes constituyen una buena aproximación de la dinámica esperada. Para obtener una percepción más amplia del comportamiento y evolución histórica reciente de los precios de la muestra veáse la @fig-ser1 y @fig-ser2 en el apartado de Anexos.
 
 
 ## Resultados metodología
 
 ```{r}
 #| label: fig-perc
-#| fig-dist: "Distribución simulada de resultados de carteras por perceptiles y valor esperado"
+#| fig-cap: "Distribución simulada de resultados de carteras por perceptiles y valor esperado"
 #| fig-width: 7
 #| fig-height: 3.5
 
 grafico.perceptiles
 ```
 
-Los resultados de las simulaciones muestran una relación consistente entre rentabilidad esperada y riesgo. La cartera **Agresiva** presenta el mayor valor esperado (132 146 USD), además presenta una asimetría, debido a que el promedio muestra un sesgo a la derecha respecto a la mediana, por valores muy altos; valores mayores a 177 852 USD en el 5% de los escenarios más favorables. Además muestra la mayor desviación de entre trayectorias con una desviación estándar reportada de (25 325 USD), cómo resultado poseee la brecha más amplia entre sus valores extremos, relacionada directamente a su exposión a escenarios desfavorables, donde el VaR (5%) está por debajo a la inversión inicial, hay pérdidas. Le sigue la cartera **Diversificada** que presenta una posición muy similar. Es importante resaltar que esta cartera es la que presenta mayor probabilidad de pérdida con un (11.6%). 
+Los resultados de las simulaciones muestran una relación consistente entre rentabilidad esperada y riesgo. La cartera **Agresiva** presenta el mayor valor esperado (132 146 USD), además presenta una asimetría, debido a que el promedio muestra un sesgo a la derecha respecto a la mediana, por valores mayores a 177 852 USD en el 5% de los escenarios más favorables. Adicionalmente tiene la mayor desviación estándar de (25 325 USD) entre escenarios, cómo resultado poseee la brecha más amplia entre valores extremos, relacionada directamente a su exposición a escenarios desfavorables, donde el VaR (5%) está por debajo a la inversión inicial. La cartera **Diversificada** presenta una posición similar. 
 
-En contraste con lo anterior las carteras **Concentrada, Moderada, Conservadora** presentan esecnarios más equilibrados debido al bajo perfil vólatil de sus acciones, resaltando la **Conservadiora** que presenta la distribución más símetrica, reflejada en su desviación estándar, que es la menor con (10 247 USD), adémas es la que tiene menor sesgo pues promedio (118 772 USD) y mediana (118 287 USD) son prácticamente idénticos, esa proporcionalidad se refleja en una exposición al riesgo más moderada con probabilidad de pérdida (> 0.5%).
+En contraste con lo anterior las carteras **Concentrada, Moderada, Conservadora** presentan escenarios más equilibrados debido al bajo perfil vólatil de sus acciones, resaltando la **Conservadora** que presenta la distribución de resultados más símetrica, reflejada en su desviación estándar de (10 247 USD), adémas es la que tiene menor sesgo pues promedio (118 772 USD) y mediana (118 287 USD), son prácticamente idénticos, esa proporcionalidad se refleja en una exposición al riesgo más moderada con una probabilidad de pérdida de (4.1%).
 
-Un resultado particularmente interesante es el comportamiento de la cartera *Diversificada* frente a su contraparte *Concentrada*. Los resultados reflejan que la *Diversificada* además de tener la mayor probabilidad de pérdida, también presentó el peor VaR de la muestra (95,629 USD). Este resultado parece ser contradictorio desde la lógica tradicional del mundo de las inversiones, sin embargo, estos resultados deben interpretarse considerando una limitación importante del estudio. Aunque la construcción de las carteras concentrada y diversificada se fundamentó en el análisis de correlaciones históricas, las simulaciones fueron realizadas mediante GBM independientes, suponiendo correlación nula entre los activos. Esta simplificación impide capturar completamente los beneficios de diversificación derivados de correlaciones imperfectas y, al mismo tiempo, tiende a subestimar el riesgo de las carteras formadas por activos altamente correlacionados.
+Un resultado interesante es el comportamiento de la cartera **Diversificada** frente a su contraparte **Concentrada**. Los resultados reflejan que la **Diversificada** además de tener la mayor probabilidad de pérdida (11.6%), también presentó el peor VaR de la muestra (95,629 USD). Este resultado parece ser contradictorio desde la lógica tradicional de inversiones, sin embargo, estos resultados deben considerar una limitación importante del modelo. Aunque la construcción de ambas carteras se fundamentó en el análisis de correlaciones históricas, las simulaciones fueron realizadas mediante GBM independientes, suponiendo correlación nula entre los activos. Esta simplificación impide capturar completamente los beneficios de diversificación.
 
 
-Por otro lado, desde la lógica de modelo, la explicación se encuentra en la composición específica de los activos seleccionados, como se muestra en la tabla de abajo, donde se observa cómo una consecuencia de la relación riesgo-rentabilidad, donde la cartera **Concentrada** posee un ratio (0.84), que resulta más favorable que el de la cartera diversificada (0.58).
+Por otro lado, desde la lógica de modelo, la explicación se encuentra en la composición de los activos seleccionados, donde se observa cómo una consecuencia de la relación *riesgo-rentabilidad*, donde la cartera **Concentrada** posee un ratio (0.84), que resulta más favorable que el de la cartera diversificada (0.58).
 
 ```{r}
 
@@ -250,22 +255,81 @@ comparacion.carteras.4.5 <- tibble(
 
 kable(comparacion.carteras.4.5, align = c("l", "c", "c","c"))
 
+
+```
+
+Los *errores estándar* del valor esperado oscilaron entre 102 y 253 USD, menos del 0,2 % del valor esperado de las carteras. Asimismo, los *errores estándar* de la probabilidad de pérdida se situaron entre 0,002 y 0,003. los *intervalos de confianza* del 95% refuerzan la precisión obtenida por los *errores estándar*, reflejada en la reducida amplitud de los intervalos tanto para el valor esperado como para la probabilidad de pérdida. En conjunto, los resultados indican que las estimaciones son estadísticamente estables y respaldan la robustez de las conclusiones obtenidas.
+
+```{=typst}
+#figure(
+  caption: [Indicadores de desempeño e intervalos de confianza de las carteras],
+
+  align(center,
+    table(
+      columns: (3cm, 4cm, 4cm, 3cm, 3cm),
+      stroke: 0.4pt + gray,
+      inset: 3pt,
+
+      table.cell(fill: rgb("#1F4E79"))[
+        #text(fill: white)[*Cartera*]
+      ],
+
+      table.cell(fill: rgb("#1F4E79"))[
+        #text(fill: white)[*Valor esperado*]
+      ],
+
+      table.cell(fill: rgb("#1F4E79"))[
+        #text(fill: white)[*IC esperanza (95%)*]
+      ],
+
+      table.cell(fill: rgb("#1F4E79"))[
+        #text(fill: white)[*Prob. pérdida*]
+      ],
+
+      table.cell(fill: rgb("#1F4E79"))[
+        #text(fill: white)[*IC pérdida (95%)*]
+      ],
+
+      [Conservadora],
+      [118,772.3],
+      [118,571 – 118,973],
+      [4.17%],
+      [3.78% – 4.56%],
+
+      [Moderada],
+      [122,562.2],
+      [122,284 – 122,840],
+      [6.26%],
+      [5.79% – 6.73%],
+
+      [Agresiva],
+      [132,146.4],
+      [131,650 – 132,643],
+      [9.42%],
+      [8.85% – 9.99%],
+
+      [Concentrada],
+      [128,068.2],
+      [127,773 – 128,363],
+      [2.67%],
+      [2.35% – 2.99%],
+
+      [Diversificada],
+      [127,126.4],
+      [126,670 – 127,583],
+      [11.60%],
+      [10.97% – 12.23%]
+    )
+  )
+) <tbl-resultados>
 ```
 
 
+## Conclusiones y limites del modelo
 
+En conclusión, las simulaciones realizadas mediante el **MBG** permitieron analizar el impacto de la volatilidad y la composición de los activos en el desempeño futuro de diversas estrategias de inversión. Los resultados muestran que carteras con mayores rendimientos esperados no necesariamente  presentan una mayor probabilidad de pérdida, lo que evidencia la importancia de evaluar simultáneamente tanto la rentabilidad como el riesgo. Por último, la simulación de Monte Carlo resultó ser una herramienta útil y precisa para representar la incertidumbre inherente a los mercados.
 
-
-
-
-
-
-Las estimaciones obtenidas mediante simulación de Montecarlo presentan una elevada precisión estadística. Los errores estándar del valor esperado oscilaron entre 102 y 253 USD, lo que representa menos del 0,2 % del valor esperado de las carteras. Asimismo, los errores estándar de la probabilidad de pérdida se situaron entre 0,002 y 0,003, lo que indica una gran estabilidad en las estimaciones derivadas de las 10 000 simulaciones realizadas.
-
-
-## Alcance y limites del modelo
-
-Los resultados obtenidos deben interpretarse teniendo en cuenta las simplificaciones inherentes al modelo utilizado. En primer lugar, el **Movimiento Browniano Geométrico** asume **rendimientos logarítmicos normales**, **volatilidad** y **rendimientos esperados** constantes y la ausencia de saltos bruscos en los precios; condiciones que rara vez se cumplen plenamente en los mercados financieros reales. Asimismo, los **parámetros** de rendimiento esperado y volatilidad se estimaron a partir de **datos históricos**, bajo el supuesto de que el comportamiento pasado es representativo del desempeño futuro. Además, las simulaciones se realizaron asumiendo que los **activos son independientes**; por consiguiente, las correlaciones históricas observadas entre las empresas no se incorporaron explícitamente en el proceso estocástico. Esta simplificación puede conducir a una subestimación del riesgo en carteras concentradas y limitar una representación precisa de los beneficios reales de la diversificación. Por último, la muestra analizada se limitó a 18 empresas y las carteras se construyeron mediante asignaciones con ponderación igualitaria; por tanto, estos resultados no deben interpretarse como representativos de todo el universo del S&P 500 ni de estrategias de inversión optimizadas empledas en la realidad.
+Estos resultados deben interpretarse teniendo en cuenta las simplificaciones del modelo. El **MBG** asume rendimientos logarítmicos con distribución normal, parámetros constantes y la ausencia de saltos repentinos en precios. Asimismo, se asume independencia entre activos; simplificación que conduce a una subestimación del riesgo en carteras concentradas y limita beneficios de las diversificadas. Finalmente, la muestra se limitó a 18 empresas con carteras equiponderadas; en consecuencia, los resultados no deben interpretarse como representativos de todo el universo del S&P 500 ni de estrategias avanzadas de optimización.
 
 
 # Bibliografía
@@ -282,7 +346,6 @@ Glasserman, P. (2004). Monte Carlo methods in financial engineering. Springer.
 
 # Anexos
 
-## Sobre empresas
 
 ```{=typst}
 #figure(align(center,

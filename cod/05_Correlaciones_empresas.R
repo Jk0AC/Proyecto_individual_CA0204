@@ -29,7 +29,7 @@ diag(matriz.cor) <- NA
 
 #Encontramos la correlación máxima de cada columna/empresa:
 cor.maximas <- apply(matriz.cor, 2, max, na.rm = TRUE)
-
+cor.maximas[cor.maximas > 0.5] %>% sort()
 
 #Encontramos la mínima correlación de cada columna/empresa:
 cor.min <- apply(matriz.cor, 2, min, na.rm = TRUE) %>% sort()
