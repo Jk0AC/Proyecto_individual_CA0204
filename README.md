@@ -1,6 +1,6 @@
 # Proyecto_individual_CA0204
 
-#Simulación de carteras de inversión mediante Monte Carlo
+# Simulación de carteras de inversión mediante Monte Carlo
 
 Este proyecto analiza el comportamiento de distintas carteras de acciones del **S&P 500** 
 mediante simulaciones de Monte Carlo basadas en el **Movimiento Browniano Geométrico (MBG)**, 
