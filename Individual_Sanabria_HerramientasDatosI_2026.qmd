@@ -13,13 +13,15 @@ author: |-
    Universidad de Costa Rica, Escuela de Mátematica, Departamento de    Ciencias Actuariales \
    Ciudad Universitaria Rodrigo Facio, San Pedro de Montes de Oca,     San José, Costa Rica \
    Profesor: Luis Alberto Juárez Potoy \
-   10 de agosto de 2026
+   25 de noviembre de 2026
     
 
 lang: es
   
 format:  
   typst:
+    number-sections: true
+    number-depth: 3
     papersize: a4
     fontsize: 12pt
     margin:
@@ -80,25 +82,17 @@ highlight-style: arrow
 
 ```{r}
 
-source("01_carga_librerias.R") 
-source("02_funciones_auxiliares.R") %>% capture.output() %>% invisible()
+source("cod/01_carga_librerias.R") |> capture.output() |> invisible()
+source("cod/02_funciones_auxiliares.R") %>% capture.output() %>% invisible()
 ```
 
-```{r}
-
-#Lectura data: 
-
-stock.price.raw <- read_csv("../data/master_stock_data.csv") 
-
-
-```
 
 ```{r}
 #| include: false
-source("03_Revisión_y_depuración_data.R") %>% capture.output() %>% invisible()
-source("04_Información_descriptiva_data.R") %>% capture.output() %>% invisible()
-source("05_Correlaciones_empresas.R") %>% capture.output() %>% invisible()
-source("03_Revisión_y_depuración_data.R") %>% capture.output() %>% invisible()
+source("cod/03_Revisión_y_depuración_data.R") %>% capture.output() %>% invisible()
+source("cod/04_Información_descriptiva_data.R") %>% capture.output() %>% invisible()
+source("cod/05_Correlaciones_empresas.R") %>% capture.output() %>% invisible()
+source("cod/03_Revisión_y_depuración_data.R") %>% capture.output() %>% invisible()
 
 ```
 
@@ -182,9 +176,9 @@ Para comparar el desempeño de las carteras, se utilizaron cinco indicadores: el
 # Resultados
 
 ```{r}
-source("06_Modelo_Lognormal_y_Monte_Carlo.R")
-source("07_Construcción_carteras.R")
-source("08_Gráficos.R")
+source("cod/06_Modelo_estocástico_y_Monte_Carlo.R") %>% capture.output() %>% invisible()
+source("cod/07_Construcción_carteras.R") %>% capture.output() %>% invisible()
+source("cod/08_Gráficos.R") %>% capture.output() %>% invisible()
 ```
 
 
@@ -326,48 +320,48 @@ Los *errores estándar* del valor esperado oscilaron entre 102 y 253 USD, **equi
       ],
 
       [Conservadora],
-      [118,772.3],
-      [118,571 – 118,973],
-      [4.17%],
-      [3.78% – 4.56%],
+      [118 772,3],
+      [118 571 – 118 973],
+      [4,17%],
+      [3,78% – 4,56%],
 
       [Moderada],
-      [122,562.2],
-      [122,284 – 122,840],
-      [6.26%],
-      [5.79% – 6.73%],
+      [122 562,2],
+      [122 284 – 122 840],
+      [6,26%],
+      [5,79% – 6,73%],
 
       [Agresiva],
-      [132,146.4],
-      [131,650 – 132,643],
-      [9.42%],
-      [8.85% – 9.99%],
+      [132 146.4],
+      [131 650 – 132 643],
+      [9,42%],
+      [8,85% – 9,99%],
 
       [Concentrada],
-      [128,068.2],
-      [127,773 – 128,363],
-      [2.67%],
-      [2.35% – 2.99%],
+      [128 068,2],
+      [127 773 – 128 363],
+      [2,67%],
+      [2,35% – 2,99%],
 
       [Diversificada],
-      [127,126.4],
-      [126,670 – 127,583],
-      [11.60%],
-      [10.97% – 12.23%]
+      [127 126,4],
+      [126 670 – 127 583],
+      [11,60%],
+      [10,97% – 12,23%]
     )
   )
 ) <tbl-resultados>
 ```
 
 
-## Conclusiones y limites del modelo
+# Conclusiones y limites del modelo
 
 En conclusión, las simulaciones mediante el **MBG** permitieron analizar el impacto de la volatilidad y la composición de los activos sobre el desempeño futuro de distintas estrategias de inversión. Los resultados muestran que un mayor rendimiento esperado no implica necesariamente una mayor probabilidad de pérdida, lo que evidencia la importancia de **evaluar conjuntamente la rentabilidad y el riesgo**. Asimismo, la simulación de **Monte Carlo** demostró ser una herramienta útil para representar la incertidumbre del mercado y obtener estimaciones precisas bajo los supuestos del modelo.
 
-No obstante, los resultados deben interpretarse considerando las simplificaciones del **MBG**, que supone rendimientos logarítmicos normalmente distribuidos, parámetros constantes y ausencia de saltos repentinos en los precios. Además, **la independencia** asumida entre los activos tiende a subestimar el riesgo de las carteras con **correlaciones históricas** positivas y elevadas, como la **Concentrada**, e impide representar adecuadamente los beneficios de las correlaciones bajas o negativas en las **carteras diversificadas**. Finalmente, la muestra se limitó a 18 empresas y carteras equiponderadas, por lo que los resultados no son necesariamente representativos del conjunto del S&P 500 ni de estrategias de optimización de carteras.
+No obstante, los resultados deben interpretarse considerando las simplificaciones del **MBG**, que supone rendimientos logarítmicos normalmente distribuidos, parámetros constantes y ausencia de saltos repentinos en los precios. Además, **la independencia** asumida entre los activos tiende a subestimar el riesgo de las carteras con **correlaciones históricas** positivas y elevadas, como la **Concentrada**, e impide representar adecuadamente los beneficios de las correlaciones bajas o negativas en las **carteras diversificadas**. Finalmente, la muestra se limitó a 18 empresas y carteras equiponderadas, por lo que los resultados no son necesariamente representativos del conjunto del S&P 500 ni de estrategias avanzadas de optimización de carteras.
 
 
-# Anexos
+# Anexos {.unnumbered}
 
 
 ```{=typst}
@@ -420,7 +414,7 @@ No obstante, los resultados deben interpretarse considerando las simplificacione
 ```
  
  
-## Relaciones entre empresas
+## Relaciones entre empresas {.unnumbered}
  
 ```{r}
 #| label: fig-corr
@@ -457,29 +451,29 @@ grafico.corr.empresas()
         #text(fill: white)[*Sector GICS*]
       ],
 
-      [DUK], [SO], [0.8412],
+      [DUK], [SO], [0,8412],
       table.cell(fill: rgb("#DCE6F1"))[*Servicios de Utilidad Pública*],
 
-      [AXP], [JPM], [0.7316],
+      [AXP], [JPM], [0,7316],
       table.cell(fill: rgb("#DCE6F1"))[*Financiero*],
 
-      [PH], [URI], [0.6883],
+      [PH], [URI], [0,6883],
       table.cell(fill: rgb("#DCE6F1"))[*Industriales*],
 
-      [SCHW], [JPM], [0.6593],
+      [SCHW], [JPM], [0,6593],
       table.cell(fill: rgb("#DCE6F1"))[*Financiero*],
 
-      [LIN], [PH], [0.5736],
+      [LIN], [PH], [0,5736],
       table.cell(fill: rgb("#DCE6F1"))[*Materiales/Industriales*],
 
-      [COO], [STE], [0.5483],
+      [COO], [STE], [0,5483],
       table.cell(fill: rgb("#DCE6F1"))[*Cuidado de la Salud*]
     )
   )
 ) <tbl-correlaciones>
 ```
 
-## Series históricas
+## Series históricas {.unnumbered}
 
 ```{r}
 #| label: fig-ser1
@@ -503,10 +497,16 @@ grafico.serie.historica.2
 #pagebreak()
 ```
 
-# Bibliografía
+# Referencias {.unnumbered}
 
+```{=typst}
+#show link: set text(fill: blue)
+```
 
-Black, F., & Scholes, M. (1973). The pricing of options and corporate liabilities. Journal of Political Economy, 81(3), 637-654. https://doi.org/10.1086/260062
+```{=typst}
+#block[
+  #set par(hanging-indent: 1.27cm, spacing: 0.65em)
+Black, F., & Scholes, M. (1973). The pricing of options and corporate liabilities. Journal of Political Economy, 81(3), 637-654. https://doi.org/10.1086/260062 
 
 
 Hull, J. C. (2022). Options, futures, and other derivatives (11th ed.). Pearson.
@@ -540,7 +540,7 @@ Wickham, H., Hester, J., & Bryan, J. (2026). readr: Read rectangular text data (
 
 
 Wickham, H., Vaughan, D., & Girlich, M. (2025). tidyr: Tidy messy data (Versión 1.3.2) [Paquete de R]. https://doi.org/10.32614/CRAN.package.tidyr
+]
+```
 
-# Enlace a Repositorio:
 
-<>

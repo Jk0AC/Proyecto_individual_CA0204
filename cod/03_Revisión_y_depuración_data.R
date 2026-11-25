@@ -5,7 +5,7 @@
 
 #Carga data:
 
-stock.price.raw <- read_csv("../data/master_stock_data.csv") 
+stock.price.raw <- read_csv("data/master_stock_data.csv") 
 
 
 #Revisión preliminar data: ----
