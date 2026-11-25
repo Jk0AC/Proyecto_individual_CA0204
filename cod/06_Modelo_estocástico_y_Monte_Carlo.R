@@ -1,5 +1,11 @@
+#Contiene los parámeros del modelo MBG, definiendo en código las expresiones
+#de la sección metodologica. Además crea los shocks normales (seed = 309) junto 
+#con las proyecciones Monte Carlo, con las 10 000 posibles trayectorias con 
+#pasos mensuales del precio las acciones de cada empresa de la muestra
 
-# Modelo Lognormal y Monte Carlo: ----
+
+
+# Modelo estocástico y Monte Carlo: ----
 
 ##(i) Parametros: ----
 
